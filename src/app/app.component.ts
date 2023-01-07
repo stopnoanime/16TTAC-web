@@ -1,5 +1,5 @@
-import { Compiler, Parser, Sim } from '16ttac-sim';
 import { Component, OnInit } from '@angular/core';
+import { SimService } from './sim.service';
 
 @Component({
   selector: 'app-root',
@@ -7,23 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  outputBuffer = ''
 
-  parser = new Parser();
-  compiler = new Compiler();
+  constructor(public sim: SimService) {}
 
-  sim = new Sim({
-    outputRawCallback: (n) => this.outputBuffer += String.fromCharCode(n)
-  });
-
+  wasCompiled = false;
   sourceCode = `'a' => OUT 'v' => OUT 'c' => OUT`
 
-  compile() {
-    this.sim.initializeMemory(this.compiler.compile(this.parser.parse(this.sourceCode)))
-  }
-  
   ngOnInit() {
   }
-
-
 }

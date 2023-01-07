@@ -1,16 +1,20 @@
-<button mat-flat-button color="primary" (click)="compile()">Compile</button> <br>
-<button mat-flat-button color="primary" (click)="sim.singleStep()">Step</button> <br>
+<div class="flex gap-2 p-4">
+  <button mat-flat-button color="primary" (click)="sim.compile(sourceCode); wasCompiled=true;" [disabled]="sim.simRunning" matTooltip="Compile and load source code"><mat-icon>build</mat-icon></button> 
+
+  <button mat-flat-button color="primary" (click)="sim.reset()" [disabled]="!wasCompiled || sim.simRunning" matTooltip="Reset CPU"><mat-icon>restart_alt</mat-icon></button>
+  <button mat-flat-button color="primary" (click)="sim.singleStep()" [disabled]="!wasCompiled || sim.simRunning"  matTooltip="Single step CPU"><mat-icon>skip_next</mat-icon></button>
+  <button mat-flat-button color="primary" (click)="sim.startStop()" [disabled]="!wasCompiled"  [matTooltip]="sim.simRunning ?  'Stop CPU' : 'Run CPU'">
+    <mat-icon *ngIf="!sim.simRunning">play_arrow</mat-icon>
+    <mat-icon *ngIf="sim.simRunning">stop</mat-icon>
+  </button>
+</div>
 
 <mat-form-field appearance="fill">
   <mat-label>Textarea</mat-label>
-  <textarea matInput [(ngModel)]="sourceCode"></textarea>
+  <textarea matInput [(ngModel)]="sourceCode" (ngModelChange)="wasCompiled = false"></textarea>
 </mat-form-field>
 
 <div>
-  Program counter: {{sim.pc}}
-</div>
-
-<div>
   outputBuffer: 
-  {{outputBuffer}}
+  {{sim.outputBuffer}}
 </div>
