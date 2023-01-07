@@ -1,5 +1,6 @@
 import { Compiler, Parser, Sim } from '16ttac-sim';
 import { Injectable } from '@angular/core';
+import { Subscription, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ export class SimService {
   public get simRunning() {
     return this._simRunning;
   }
+  private simRunningSubscription!: Subscription;
 
   constructor() {}
 
@@ -41,6 +43,7 @@ export class SimService {
   public startStop() {
     if (this._simRunning) {
       this._simRunning = false;
+      this.simRunningSubscription.unsubscribe();
     } else {
       this._simRunning = true;
       this.runLoop();
@@ -51,6 +54,6 @@ export class SimService {
     if (!this._simRunning) return;
     this.singleStep();
 
-    setTimeout(() => this.runLoop(), 1000);
+    this.simRunningSubscription = timer(1000).subscribe(() => this.runLoop());
   }
 }
