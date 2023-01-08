@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { MatSliderModule } from '@angular/material/slider';
     MatInputModule,
     MatTooltipModule,
     MatSliderModule,
+    MatCheckboxModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

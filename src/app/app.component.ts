@@ -10,7 +10,12 @@ export class AppComponent implements OnInit {
   constructor(public sim: SimService) {}
 
   wasCompiled = false;
-  sourceCode = `'a' => OUT 'v' => OUT 'c' => OUT`;
+  sourceCode = `
+    'a' => OUT 
+    'v' => OUT 
+    'c' => OUT 
+    NULL => HALT
+  `;
 
   ngOnInit() {}
 
@@ -20,5 +25,9 @@ export class AppComponent implements OnInit {
 
   sliderChange(freq: number) {
     this.sim.simTimeout = 1000 / freq;
+  }
+
+  checkBoxChange(val: boolean) {
+    this.sim.fullSpeed = val;
   }
 }

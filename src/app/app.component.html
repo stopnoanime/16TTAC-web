@@ -47,11 +47,19 @@
     thumbLabel
     color="primary"
     [displayWith]="formatSliderLabel"
-    [disabled]="!wasCompiled"
+    [disabled]="!wasCompiled || fullSpeed.checked"
     (input)="sliderChange($event.value!)"
   >
     <input matSliderThumb />
   </mat-slider>
+
+  <mat-checkbox
+    #fullSpeed
+    color="primary"
+    [disabled]="!wasCompiled"
+    (change)="checkBoxChange($event.checked)"
+    >Full speed</mat-checkbox
+  >
 </div>
 
 <mat-form-field appearance="fill">
@@ -60,6 +68,7 @@
     matInput
     [(ngModel)]="sourceCode"
     (ngModelChange)="wasCompiled = false"
+    [disabled]="sim.simRunning"
   ></textarea>
 </mat-form-field>
 
@@ -67,3 +76,5 @@
   outputBuffer:
   {{ sim.outputBuffer }}
 </div>
+
+{{ sim.acc }}

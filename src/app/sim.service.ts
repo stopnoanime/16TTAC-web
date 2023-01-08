@@ -1,6 +1,7 @@
 import { Compiler, Parser, Sim } from '16ttac-sim';
 import { Injectable } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
+import { asapScheduler, asyncScheduler } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +9,13 @@ import { Subscription, timer } from 'rxjs';
 export class SimService {
   public outputBuffer: string = '';
   public simTimeout: number = 1000;
+  public fullSpeed: boolean = false;
   public get simRunning() {
     return this._simRunning;
+  }
+
+  public get acc() {
+    return this.sim.acc;
   }
 
   private parser = new Parser();
@@ -52,11 +58,14 @@ export class SimService {
   }
 
   private runLoop() {
-    if (!this._simRunning) return;
-    this.singleStep();
+    for (let i = 0; i < (this.fullSpeed ? 1_000_000 : 1); i++) {
+      if (!this._simRunning) return;
+      this.singleStep();
+    }
 
-    this.simRunningSubscription = timer(this.simTimeout).subscribe(() =>
-      this.runLoop()
+    this.simRunningSubscription = asyncScheduler.schedule(
+      () => this.runLoop(),
+      this.fullSpeed ? undefined : this.simTimeout
     );
   }
 }
