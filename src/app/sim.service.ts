@@ -7,6 +7,10 @@ import { Subscription, timer } from 'rxjs';
 })
 export class SimService {
   public outputBuffer: string = '';
+  public simTimeout: number = 1000;
+  public get simRunning() {
+    return this._simRunning;
+  }
 
   private parser = new Parser();
   private compiler = new Compiler();
@@ -16,9 +20,6 @@ export class SimService {
   });
 
   private _simRunning = false;
-  public get simRunning() {
-    return this._simRunning;
-  }
   private simRunningSubscription!: Subscription;
 
   constructor() {}
@@ -54,6 +55,8 @@ export class SimService {
     if (!this._simRunning) return;
     this.singleStep();
 
-    this.simRunningSubscription = timer(1000).subscribe(() => this.runLoop());
+    this.simRunningSubscription = timer(this.simTimeout).subscribe(() =>
+      this.runLoop()
+    );
   }
 }

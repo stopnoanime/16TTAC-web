@@ -13,4 +13,12 @@ export class AppComponent implements OnInit {
   sourceCode = `'a' => OUT 'v' => OUT 'c' => OUT`;
 
   ngOnInit() {}
+
+  formatSliderLabel(value: number): string {
+    return `${value}Hz`;
+  }
+
+  sliderChange(freq: number) {
+    this.sim.simTimeout = 1000 / freq;
+  }
 }

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
+    MatSliderModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
