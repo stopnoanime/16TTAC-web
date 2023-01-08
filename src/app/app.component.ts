@@ -23,11 +23,7 @@ export class AppComponent implements OnInit {
     return `${value}Hz`;
   }
 
-  sliderChange(freq: number) {
-    this.sim.simTimeout = 1000 / freq;
-  }
-
-  checkBoxChange(val: boolean) {
-    this.sim.fullSpeed = val;
+  toHex(value: number) {
+    return '0x' + ('0000' + value.toString(16).toUpperCase()).slice(-4);
   }
 }

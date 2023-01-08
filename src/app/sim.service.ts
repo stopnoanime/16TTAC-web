@@ -17,12 +17,29 @@ export class SimService {
   public get acc() {
     return this.sim.acc;
   }
+  public get adr() {
+    return this.sim.adr;
+  }
+  public get pc() {
+    return this.sim.pc;
+  }
+  public get carry() {
+    return this.sim.carry;
+  }
+  public get zero() {
+    return this.sim.zero;
+  }
 
   private parser = new Parser();
   private compiler = new Compiler();
   private sim = new Sim({
-    outputRawCallback: (n) => (this.outputBuffer += String.fromCharCode(n)),
-    haltCallback: () => (this._simRunning = false),
+    outputRawCallback: (n) => {
+      this.outputBuffer += String.fromCharCode(n);
+    },
+    haltCallback: () => {
+      this._simRunning = false;
+      this.outputBuffer += '\nHalting.';
+    },
   });
 
   private _simRunning = false;

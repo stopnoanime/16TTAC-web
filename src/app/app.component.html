@@ -48,7 +48,7 @@
     color="primary"
     [displayWith]="formatSliderLabel"
     [disabled]="!wasCompiled || fullSpeed.checked"
-    (input)="sliderChange($event.value!)"
+    (input)="this.sim.simTimeout = 1000 / $event.value!"
   >
     <input matSliderThumb />
   </mat-slider>
@@ -57,7 +57,7 @@
     #fullSpeed
     color="primary"
     [disabled]="!wasCompiled"
-    (change)="checkBoxChange($event.checked)"
+    (change)="this.sim.fullSpeed = $event.checked"
     >Full speed</mat-checkbox
   >
 </div>
@@ -72,9 +72,15 @@
   ></textarea>
 </mat-form-field>
 
-<div>
+<div class="whitespace-pre-line">
   outputBuffer:
   {{ sim.outputBuffer }}
 </div>
 
-{{ sim.acc }}
+<div class="font-thin">
+  <div>Acc: {{ toHex(sim.acc) }}</div>
+  <div>Adr: {{ toHex(sim.adr) }}</div>
+  <div>Pc: {{ toHex(sim.pc) }}</div>
+  <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
+  <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
+</div>
