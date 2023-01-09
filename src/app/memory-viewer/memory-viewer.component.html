@@ -1,0 +1,33 @@
+<div
+  class="font-mono text-gray-700 p-4 bg-gray-100 w-min"
+  (wheel)="onWheel($event)"
+>
+  <h3 matTooltip="Scroll to change address">{{ label }}</h3>
+
+  <div class="flex">
+    <mat-form-field appearance="fill" class="w-28 flex-grow">
+      <mat-label>Address</mat-label>
+      <input
+        matInput
+        type="number"
+        value="0"
+        min="0"
+        [max]="maxAddress"
+        [formControl]="addressForm"
+      />
+    </mat-form-field>
+  </div>
+
+  <div
+    *ngFor="let _ of [].constructor(blockSize / wordsPerRow); let row = index"
+    class="flex gap-2"
+  >
+    {{ "0x" + toHex((row + rowOffset) * wordsPerRow) }}
+    <div
+      *ngFor="let _ of [].constructor(wordsPerRow); let column = index"
+      class="text-gray-500"
+    >
+      {{ toHex(uint16Array[(row + rowOffset) * wordsPerRow + column]) }}
+    </div>
+  </div>
+</div>

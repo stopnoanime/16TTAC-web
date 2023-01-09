@@ -11,15 +11,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MemoryViewerComponent } from './memory-viewer/memory-viewer.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, MemoryViewerComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
     MatIconModule,
     FormsModule,
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,

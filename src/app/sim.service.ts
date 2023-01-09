@@ -29,6 +29,9 @@ export class SimService {
   public get zero() {
     return this.sim.zero;
   }
+  public get memory() {
+    return this.sim.memory;
+  }
 
   private parser = new Parser();
   private compiler = new Compiler();

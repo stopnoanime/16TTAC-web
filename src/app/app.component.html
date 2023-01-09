@@ -84,3 +84,8 @@
   <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
   <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
 </div>
+
+<app-memory-viewer
+  [uint16Array]="sim.memory"
+  [blockSize]="64"
+></app-memory-viewer>
