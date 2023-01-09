@@ -1,4 +1,4 @@
-<div class="flex gap-2 p-4 items-center">
+<div class="flex gap-3 p-4 items-center">
   <button
     mat-flat-button
     color="primary"
@@ -7,6 +7,7 @@
     matTooltip="Compile and load source code"
   >
     <mat-icon>build</mat-icon>
+    Compile
   </button>
 
   <button
@@ -17,6 +18,7 @@
     matTooltip="Reset CPU"
   >
     <mat-icon>restart_alt</mat-icon>
+    Restart
   </button>
 
   <button
@@ -27,6 +29,7 @@
     matTooltip="Single step CPU"
   >
     <mat-icon>skip_next</mat-icon>
+    Single step
   </button>
 
   <button
@@ -37,20 +40,23 @@
     [matTooltip]="sim.simRunning ? 'Stop CPU' : 'Run CPU'"
   >
     <mat-icon *ngIf="!sim.simRunning">play_arrow</mat-icon>
+    <span *ngIf="!sim.simRunning">Start</span>
+
     <mat-icon *ngIf="sim.simRunning">stop</mat-icon>
+    <span *ngIf="sim.simRunning">Stop</span>
   </button>
 
+  <span>CPU speed:</span>
   <mat-slider
     min="1"
     max="60"
     value="1"
-    thumbLabel
+    discrete
     color="primary"
     [displayWith]="formatSliderLabel"
     [disabled]="!wasCompiled || fullSpeed.checked"
-    (input)="this.sim.simTimeout = 1000 / $event.value!"
   >
-    <input matSliderThumb />
+    <input matSliderThumb (valueChange)="this.sim.simTimeout = 1000 / $event" />
   </mat-slider>
 
   <mat-checkbox
@@ -62,7 +68,7 @@
   >
 </div>
 
-<mat-form-field appearance="fill">
+<mat-form-field>
   <mat-label>Textarea</mat-label>
   <textarea
     matInput
