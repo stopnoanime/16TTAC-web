@@ -1,5 +1,5 @@
 <div
-  class="font-mono text-gray-700 p-4 bg-gray-100 w-min"
+  class="font-mono text-gray-600 p-4 bg-gray-100 w-min"
   (wheel)="onWheel($event)"
 >
   <h3 matTooltip="Scroll to change address">{{ label }}</h3>
@@ -19,15 +19,20 @@
   </div>
 
   <div
-    *ngFor="let _ of [].constructor(blockSize / wordsPerRow); let row = index"
+    *ngFor="let _ of [].constructor(blockSize / wordsPerRow); index as row"
     class="flex gap-2"
   >
-    {{ "0x" + toHex((row + rowOffset) * wordsPerRow) }}
+    <span class="text-gray-900">
+      {{
+        "0x" + toHex(getAddress(row, 0), math.ceil(math.log2(maxAddress) / 4))
+      }}
+    </span>
     <div
-      *ngFor="let _ of [].constructor(wordsPerRow); let column = index"
-      class="text-gray-500"
+      *ngFor="let _ of [].constructor(wordsPerRow); index as column"
+      [class.text-blue-500]="highlight1 === getAddress(row, column)"
+      [class.text-green-500]="highlight2 === getAddress(row, column)"
     >
-      {{ toHex(uint16Array[(row + rowOffset) * wordsPerRow + column]) }}
+      {{ toHex(uint16Array[getAddress(row, column)]) }}
     </div>
   </div>
 </div>

@@ -6,10 +6,15 @@ import { FormControl } from '@angular/forms';
   templateUrl: './memory-viewer.component.html',
 })
 export class MemoryViewerComponent implements OnInit {
+  math = Math;
+
   @Input() uint16Array!: Uint16Array;
   @Input() blockSize: number = 256;
   @Input() wordsPerRow: number = 4;
   @Input() maxAddress: number = 65_536;
+
+  @Input() highlight1: number | undefined;
+  @Input() highlight2: number | undefined;
 
   @Input() label: string = 'Memory viewer';
 
@@ -32,8 +37,15 @@ export class MemoryViewerComponent implements OnInit {
     });
   }
 
-  toHex(value: number) {
-    return value.toString(16).toUpperCase().padStart(4, '0');
+  toHex(value: number, size?: number) {
+    return value
+      .toString(16)
+      .toUpperCase()
+      .padStart(size ?? 4, '0');
+  }
+
+  getAddress(row: number, col: number) {
+    return (row + this.rowOffset) * this.wordsPerRow + col;
   }
 
   onWheel(event: WheelEvent) {

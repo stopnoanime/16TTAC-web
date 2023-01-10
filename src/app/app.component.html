@@ -75,6 +75,9 @@
     [(ngModel)]="sourceCode"
     (ngModelChange)="wasCompiled = false"
     [disabled]="sim.simRunning"
+    cdkTextareaAutosize
+    cdkAutosizeMinRows="15"
+    cdkAutosizeMaxRows="15"
   ></textarea>
 </mat-form-field>
 
@@ -85,13 +88,27 @@
 
 <div class="font-thin">
   <div>Acc: {{ toHex(sim.acc) }}</div>
-  <div>Adr: {{ toHex(sim.adr) }}</div>
-  <div>Pc: {{ toHex(sim.pc) }}</div>
+  <div class="text-blue-500">Adr: {{ toHex(sim.adr) }}</div>
+  <div class="text-green-500">Pc: {{ toHex(sim.pc) }}</div>
+  <div>Pc: {{ toHex(sim.stackPointer) }}</div>
   <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
   <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
 </div>
 
-<app-memory-viewer
-  [uint16Array]="sim.memory"
-  [blockSize]="64"
-></app-memory-viewer>
+<div class="flex gap-2 p-2">
+  <app-memory-viewer
+    [uint16Array]="sim.memory"
+    [blockSize]="64"
+    [highlight1]="sim.adr"
+    [highlight2]="sim.pc"
+  ></app-memory-viewer>
+
+  <app-memory-viewer
+    [uint16Array]="sim.stack"
+    [blockSize]="16"
+    [wordsPerRow]="1"
+    [maxAddress]="256"
+    [label]="'Stack viewer'"
+    [highlight1]="sim.stackPointer"
+  ></app-memory-viewer>
+</div>

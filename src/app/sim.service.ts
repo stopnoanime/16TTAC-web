@@ -29,8 +29,16 @@ export class SimService {
   public get zero() {
     return this.sim.zero;
   }
+
   public get memory() {
     return this.sim.memory;
+  }
+
+  public get stack() {
+    return this.sim.stack;
+  }
+  public get stackPointer() {
+    return this.sim.stackPointer;
   }
 
   private parser = new Parser();
