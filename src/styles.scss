@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+%accHighlight {
+  position: absolute;
+  z-index: 20;
+  opacity: 40%;
+}
+
+.accHighlightBlue {
+  @extend %accHighlight;
+  @apply bg-blue-500;
+}
+
+.accHighlightGreen {
+  @extend %accHighlight;
+  @apply bg-green-500;
+}

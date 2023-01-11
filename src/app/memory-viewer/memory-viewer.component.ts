@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 @Component({
   selector: 'app-memory-viewer',
   templateUrl: './memory-viewer.component.html',
+  styleUrls: ['./memory-viewer.component.scss'],
 })
 export class MemoryViewerComponent implements OnInit {
   math = Math;
@@ -13,8 +14,8 @@ export class MemoryViewerComponent implements OnInit {
   @Input() wordsPerRow: number = 4;
   @Input() maxAddress: number = 65_536;
 
-  @Input() highlight1: number | undefined;
-  @Input() highlight2: number | undefined;
+  @Input() highlightBlue?: number;
+  @Input() highlightGreen?: number;
 
   @Input() label: string = 'Memory viewer';
 

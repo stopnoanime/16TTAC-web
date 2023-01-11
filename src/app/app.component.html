@@ -2,7 +2,7 @@
   <button
     mat-flat-button
     color="primary"
-    (click)="sim.compile(sourceCode); wasCompiled = true"
+    (click)="compile()"
     [disabled]="sim.simRunning"
     matTooltip="Compile and load source code"
   >
@@ -68,18 +68,16 @@
   >
 </div>
 
-<mat-form-field>
-  <mat-label>Textarea</mat-label>
-  <textarea
-    matInput
-    [(ngModel)]="sourceCode"
-    (ngModelChange)="wasCompiled = false"
-    [disabled]="sim.simRunning"
-    cdkTextareaAutosize
-    cdkAutosizeMinRows="15"
-    cdkAutosizeMaxRows="15"
-  ></textarea>
-</mat-form-field>
+<app-code-editor
+  class="h-96"
+  [disabled]="sim.simRunning"
+  [compiled]="wasCompiled"
+  [parserOutput]="parserOutput"
+  [(sourceCode)]="sourceCode"
+  (sourceCodeChange)="wasCompiled = false"
+  [highlightBlue]="sim.adr"
+  [highlightGreen]="sim.pc"
+></app-code-editor>
 
 <div class="whitespace-pre-line">
   outputBuffer:
@@ -99,8 +97,8 @@
   <app-memory-viewer
     [uint16Array]="sim.memory"
     [blockSize]="64"
-    [highlight1]="sim.adr"
-    [highlight2]="sim.pc"
+    [highlightBlue]="sim.adr"
+    [highlightGreen]="sim.pc"
   ></app-memory-viewer>
 
   <app-memory-viewer
@@ -109,6 +107,6 @@
     [wordsPerRow]="1"
     [maxAddress]="256"
     [label]="'Stack viewer'"
-    [highlight1]="sim.stackPointer"
+    [highlightBlue]="sim.stackPointer"
   ></app-memory-viewer>
 </div>

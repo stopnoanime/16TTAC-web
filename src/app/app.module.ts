@@ -13,9 +13,11 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MemoryViewerComponent } from './memory-viewer/memory-viewer.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AceModule } from 'ngx-ace-wrapper';
+import { CodeEditorComponent } from './code-editor/code-editor.component';
 
 @NgModule({
-  declarations: [AppComponent, MemoryViewerComponent],
+  declarations: [AppComponent, MemoryViewerComponent, CodeEditorComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -28,6 +30,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatTooltipModule,
     MatSliderModule,
     MatCheckboxModule,
+    AceModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,5 +1,5 @@
 <div
-  class="font-mono text-gray-600 p-4 bg-gray-100 w-min"
+  class="font-mono text-gray-600 p-4 bg-gray-100 w-min rounded-md"
   (wheel)="onWheel($event)"
 >
   <h3 matTooltip="Scroll to change address">{{ label }}</h3>
@@ -28,10 +28,18 @@
       }}
     </span>
     <div
+      class="relative"
       *ngFor="let _ of [].constructor(wordsPerRow); index as column"
-      [class.text-blue-500]="highlight1 === getAddress(row, column)"
-      [class.text-green-500]="highlight2 === getAddress(row, column)"
     >
+      <div
+        *ngIf="highlightBlue === getAddress(row, column)"
+        class="bg-blue-500 highlightOverlay"
+      ></div>
+      <div
+        *ngIf="highlightGreen === getAddress(row, column)"
+        class="bg-green-500 highlightOverlay"
+      ></div>
+
       {{ toHex(uint16Array[getAddress(row, column)]) }}
     </div>
   </div>
