@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -16,6 +16,8 @@ export class MemoryViewerComponent implements OnInit {
 
   @Input() highlightBlue?: number;
   @Input() highlightGreen?: number;
+
+  @Output() hoveredAddressChange = new EventEmitter<number>();
 
   @Input() label: string = 'Memory viewer';
 

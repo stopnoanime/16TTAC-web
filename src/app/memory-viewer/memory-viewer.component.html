@@ -28,8 +28,10 @@
       }}
     </span>
     <div
-      class="relative"
+      class="relative cursor-alias"
       *ngFor="let _ of [].constructor(wordsPerRow); index as column"
+      (mouseenter)="hoveredAddressChange.emit(getAddress(row, column))"
+      (mouseleave)="hoveredAddressChange.emit(undefined)"
     >
       <div
         *ngIf="highlightBlue === getAddress(row, column)"

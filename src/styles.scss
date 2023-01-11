@@ -17,3 +17,8 @@
   @extend %accHighlight;
   @apply bg-green-500;
 }
+
+.accHighlightPurple {
+  @extend %accHighlight;
+  @apply bg-purple-500;
+}

@@ -27,6 +27,7 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   @Input() parserOutput?: parserOutput;
   @Input() highlightBlue?: number;
   @Input() highlightGreen?: number;
+  @Input() highlightPurple?: number;
 
   config: AceConfigInterface = {
     mode: 'text',
@@ -48,6 +49,7 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
 
     this.addMarker('accHighlightBlue', this.highlightBlue);
     this.addMarker('accHighlightGreen', this.highlightGreen);
+    this.addMarker('accHighlightPurple', this.highlightPurple);
   }
 
   ngAfterViewInit(): void {
