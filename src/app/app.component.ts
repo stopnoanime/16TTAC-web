@@ -11,7 +11,8 @@ export class AppComponent implements OnInit {
   constructor(public sim: SimService) {}
 
   wasCompiled = false;
-  hoveredAddress?: number;
+  memoryViewerHoveredAddress?: number;
+  sourceCodeHoveredAddress?: number;
   parserOutput!: parserOutput;
   sourceCode = `
   word string[10] = "61293"

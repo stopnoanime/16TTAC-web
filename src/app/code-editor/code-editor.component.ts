@@ -11,6 +11,7 @@ import {
 import { AceComponent, AceConfigInterface } from 'ngx-ace-wrapper';
 import { parserOutput } from '16ttac-sim';
 import * as ace from 'brace';
+import { CodeService } from '../code.service';
 
 @Component({
   selector: 'app-code-editor',
@@ -29,6 +30,8 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   @Input() highlightGreen?: number;
   @Input() highlightPurple?: number;
 
+  @Output() hoveredAddressChange = new EventEmitter<number>();
+
   config: AceConfigInterface = {
     mode: 'text',
     theme: 'github',
@@ -38,12 +41,16 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   @ViewChild(AceComponent) componentRef?: AceComponent;
   editor!: ace.Editor;
 
+  constructor(private codeService: CodeService) {}
+
   private currentlyShownMarkers: number[] = [];
   ngOnChanges(changes: SimpleChanges): void {
     this.currentlyShownMarkers.forEach((id) =>
       this.editor.session.removeMarker(id)
     );
     this.currentlyShownMarkers = [];
+
+    this.hoveredAddressChange.emit(undefined);
 
     if (!this.compiled) return;
 
@@ -60,6 +67,36 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
     this.sourceCodeChange.emit(this.sourceCode);
   }
 
+  outputHoveredAddress(x: number, y: number) {
+    if (!this.compiled) return;
+
+    const r = this.editor.renderer;
+    const canvasPos = r.scroller.getBoundingClientRect();
+
+    const column = Math.round(
+      (x + (r as any).scrollLeft - canvasPos.left - (r as any).$padding) /
+        r.characterWidth
+    );
+    const row = Math.floor(
+      (y + (r as any).scrollTop - canvasPos.top) / r.lineHeight
+    );
+
+    const documentPosition = this.editor.session.screenToDocumentPosition(
+      row,
+      column
+    );
+    const positionIndex = this.editor.session.doc.positionToIndex(
+      documentPosition,
+      0
+    );
+
+    const foundAddress = this.codeService.getAddressForSourceCodeIndex(
+      positionIndex,
+      this.parserOutput
+    );
+    this.hoveredAddressChange.emit(foundAddress ?? undefined);
+  }
+
   private addMarker(name: string, address?: number) {
     const range = this.getSourceCodeRangeForAddress(address);
     if (range)
@@ -71,7 +108,10 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   private getSourceCodeRangeForAddress(address?: number): ace.Range | null {
     if (address == undefined) return null;
 
-    const indexRange = this.getSourceCodeIndexRangeForAddress(address);
+    const indexRange = this.codeService.getSourceCodeIndexRangeForAddress(
+      address,
+      this.parserOutput
+    );
 
     if (!indexRange) return null;
 
@@ -92,20 +132,5 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
       endPosition.row,
       endPosition.column
     );
-  }
-
-  private getSourceCodeIndexRangeForAddress(
-    address: number
-  ): [number, number] | null {
-    if (!this.parserOutput) return null;
-
-    const found = [
-      ...this.parserOutput.instructions,
-      ...this.parserOutput.variables,
-    ].find((v) => address >= v.address && address < v.address + v.size);
-
-    if (!found) return null;
-
-    return [found.sourceStart, found.sourceEnd];
   }
 }

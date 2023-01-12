@@ -3,4 +3,6 @@
   [(value)]="sourceCode"
   [disabled]="disabled"
   (valueChange)="onValueChange()"
+  (mousemove)="outputHoveredAddress($event.clientX, $event.clientY)"
+  (mouseout)="this.hoveredAddressChange.emit(undefined)"
 ></ace>

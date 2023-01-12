@@ -16,6 +16,7 @@ export class MemoryViewerComponent implements OnInit {
 
   @Input() highlightBlue?: number;
   @Input() highlightGreen?: number;
+  @Input() highlightPurple?: number;
 
   @Output() hoveredAddressChange = new EventEmitter<number>();
 

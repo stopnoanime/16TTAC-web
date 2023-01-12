@@ -28,7 +28,7 @@
       }}
     </span>
     <div
-      class="relative cursor-alias"
+      class="relative"
       *ngFor="let _ of [].constructor(wordsPerRow); index as column"
       (mouseenter)="hoveredAddressChange.emit(getAddress(row, column))"
       (mouseleave)="hoveredAddressChange.emit(undefined)"
@@ -40,6 +40,10 @@
       <div
         *ngIf="highlightGreen === getAddress(row, column)"
         class="bg-green-500 highlightOverlay"
+      ></div>
+      <div
+        *ngIf="highlightPurple === getAddress(row, column)"
+        class="bg-purple-500 highlightOverlay"
       ></div>
 
       {{ toHex(uint16Array[getAddress(row, column)]) }}

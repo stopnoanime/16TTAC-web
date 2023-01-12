@@ -77,7 +77,8 @@
   (sourceCodeChange)="wasCompiled = false"
   [highlightBlue]="sim.adr"
   [highlightGreen]="sim.pc"
-  [highlightPurple]="hoveredAddress"
+  [highlightPurple]="memoryViewerHoveredAddress"
+  (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
 ></app-code-editor>
 
 <div class="whitespace-pre-line">
@@ -100,7 +101,8 @@
     [blockSize]="64"
     [highlightBlue]="sim.adr"
     [highlightGreen]="sim.pc"
-    (hoveredAddressChange)="hoveredAddress = $event"
+    [highlightPurple]="sourceCodeHoveredAddress"
+    (hoveredAddressChange)="memoryViewerHoveredAddress = $event"
   ></app-memory-viewer>
 
   <app-memory-viewer
