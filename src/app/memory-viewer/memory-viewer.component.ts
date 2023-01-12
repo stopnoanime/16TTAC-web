@@ -29,7 +29,7 @@ export class MemoryViewerComponent implements OnInit {
 
   ngOnInit(): void {
     this.addressForm.valueChanges.subscribe((val) => {
-      if (!val) return;
+      if (val === null) return;
 
       this.addressForm.setValue(Math.min(this.maxAddress, Math.max(0, val)), {
         emitEvent: false,
