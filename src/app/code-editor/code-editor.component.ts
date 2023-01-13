@@ -15,6 +15,7 @@ import { CodeService } from '../code.service';
 import OneSixTtacMode from './OneSixTtacMode';
 import * as ace from 'brace';
 import 'brace/theme/chrome';
+import 'brace/ext/language_tools';
 
 @Component({
   selector: 'app-code-editor',
@@ -39,6 +40,8 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     mode: '16ttac',
     theme: 'chrome',
     showPrintMargin: false,
+    enableBasicAutocompletion: true,
+    enableLiveAutocompletion: true,
     tabSize: 2,
   };
 

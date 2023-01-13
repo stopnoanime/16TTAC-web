@@ -105,4 +105,30 @@ export class OneSixTtacHighlightRules extends ace.acequire(
 export default class OneSixTtacMode extends ace.acequire('ace/mode/text').Mode {
   HighlightRules = OneSixTtacHighlightRules;
   lineCommentStart = '//';
+
+  private instructions = new Instructions();
+
+  getCompletions(
+    state: string,
+    session: ace.IEditSession,
+    pos: ace.Position,
+    prefix: string
+  ) {
+    return [
+      ...this.instructions.sources.map((w) => ({
+        value: w,
+        meta: 'source',
+      })),
+
+      ...this.instructions.destinations.map((w) => ({
+        value: w,
+        meta: 'destination',
+      })),
+
+      {
+        value: 'word',
+        meta: 'type',
+      },
+    ];
+  }
 }
