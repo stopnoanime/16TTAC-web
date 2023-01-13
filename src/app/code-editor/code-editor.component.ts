@@ -39,6 +39,7 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     mode: '16ttac',
     theme: 'chrome',
     showPrintMargin: false,
+    tabSize: 2,
   };
 
   @ViewChild(AceComponent) componentRef?: AceComponent;
