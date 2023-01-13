@@ -53,6 +53,8 @@ export class MemoryViewerComponent implements OnInit {
   }
 
   onWheel(event: WheelEvent) {
+    event.preventDefault();
+
     if (event.deltaY > 0) this.rowOffset += 1;
     if (event.deltaY < 0) this.rowOffset -= 1;
 
