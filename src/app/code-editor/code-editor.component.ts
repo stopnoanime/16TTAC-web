@@ -4,21 +4,24 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { AceComponent, AceConfigInterface } from 'ngx-ace-wrapper';
 import { parserOutput } from '16ttac-sim';
-import * as ace from 'brace';
 import { CodeService } from '../code.service';
+import OneSixTtacMode from './OneSixTtacMode';
+import * as ace from 'brace';
+import 'brace/theme/chrome';
 
 @Component({
   selector: 'app-code-editor',
   templateUrl: './code-editor.component.html',
   styleUrls: ['./code-editor.component.scss'],
 })
-export class CodeEditorComponent implements OnChanges, AfterViewInit {
+export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() sourceCode: string = '';
   @Output() sourceCodeChange = new EventEmitter<string>();
 
@@ -33,8 +36,8 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   @Output() hoveredAddressChange = new EventEmitter<number>();
 
   config: AceConfigInterface = {
-    mode: 'text',
-    theme: 'github',
+    mode: '16ttac',
+    theme: 'chrome',
     showPrintMargin: false,
   };
 
@@ -42,6 +45,10 @@ export class CodeEditorComponent implements OnChanges, AfterViewInit {
   editor!: ace.Editor;
 
   constructor(private codeService: CodeService) {}
+
+  ngOnInit(): void {
+    (ace as any).define('ace/mode/16ttac', { Mode: OneSixTtacMode });
+  }
 
   private currentlyShownMarkers: number[] = [];
   ngOnChanges(changes: SimpleChanges): void {
