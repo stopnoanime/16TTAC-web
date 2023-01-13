@@ -1,116 +1,124 @@
-<div class="flex gap-3 p-4 items-center">
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="compile()"
+<div
+  class="grid h-screen"
+  style="grid-template-columns: 1fr auto; grid-template-rows: auto 1fr 1fr auto"
+>
+  <div class="flex gap-3 p-4 items-center">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="compile()"
+      [disabled]="sim.simRunning"
+      matTooltip="Compile and load source code"
+    >
+      <mat-icon>build</mat-icon>
+      Compile
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="sim.reset()"
+      [disabled]="!wasCompiled || sim.simRunning"
+      matTooltip="Reset CPU"
+    >
+      <mat-icon>restart_alt</mat-icon>
+      Restart
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="sim.singleStep()"
+      [disabled]="!wasCompiled || sim.simRunning"
+      matTooltip="Single step CPU"
+    >
+      <mat-icon>skip_next</mat-icon>
+      Single step
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="sim.startStop()"
+      [disabled]="!wasCompiled"
+      [matTooltip]="sim.simRunning ? 'Stop CPU' : 'Run CPU'"
+    >
+      <mat-icon *ngIf="!sim.simRunning">play_arrow</mat-icon>
+      <span *ngIf="!sim.simRunning">Start</span>
+
+      <mat-icon *ngIf="sim.simRunning">stop</mat-icon>
+      <span *ngIf="sim.simRunning">Stop</span>
+    </button>
+
+    <span>CPU speed:</span>
+    <mat-slider
+      min="1"
+      max="60"
+      value="1"
+      discrete
+      color="primary"
+      [displayWith]="formatSliderLabel"
+      [disabled]="!wasCompiled || fullSpeed.checked"
+    >
+      <input
+        matSliderThumb
+        (valueChange)="this.sim.simTimeout = 1000 / $event"
+      />
+    </mat-slider>
+
+    <mat-checkbox
+      #fullSpeed
+      color="primary"
+      [disabled]="!wasCompiled"
+      (change)="this.sim.fullSpeed = $event.checked"
+      >Full speed</mat-checkbox
+    >
+  </div>
+
+  <app-code-editor
+    class="col-start-1 row-span-2"
     [disabled]="sim.simRunning"
-    matTooltip="Compile and load source code"
-  >
-    <mat-icon>build</mat-icon>
-    Compile
-  </button>
-
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="sim.reset()"
-    [disabled]="!wasCompiled || sim.simRunning"
-    matTooltip="Reset CPU"
-  >
-    <mat-icon>restart_alt</mat-icon>
-    Restart
-  </button>
-
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="sim.singleStep()"
-    [disabled]="!wasCompiled || sim.simRunning"
-    matTooltip="Single step CPU"
-  >
-    <mat-icon>skip_next</mat-icon>
-    Single step
-  </button>
-
-  <button
-    mat-flat-button
-    color="primary"
-    (click)="sim.startStop()"
-    [disabled]="!wasCompiled"
-    [matTooltip]="sim.simRunning ? 'Stop CPU' : 'Run CPU'"
-  >
-    <mat-icon *ngIf="!sim.simRunning">play_arrow</mat-icon>
-    <span *ngIf="!sim.simRunning">Start</span>
-
-    <mat-icon *ngIf="sim.simRunning">stop</mat-icon>
-    <span *ngIf="sim.simRunning">Stop</span>
-  </button>
-
-  <span>CPU speed:</span>
-  <mat-slider
-    min="1"
-    max="60"
-    value="1"
-    discrete
-    color="primary"
-    [displayWith]="formatSliderLabel"
-    [disabled]="!wasCompiled || fullSpeed.checked"
-  >
-    <input matSliderThumb (valueChange)="this.sim.simTimeout = 1000 / $event" />
-  </mat-slider>
-
-  <mat-checkbox
-    #fullSpeed
-    color="primary"
-    [disabled]="!wasCompiled"
-    (change)="this.sim.fullSpeed = $event.checked"
-    >Full speed</mat-checkbox
-  >
-</div>
-
-<app-code-editor
-  class="h-96"
-  [disabled]="sim.simRunning"
-  [compiled]="wasCompiled"
-  [parserOutput]="parserOutput"
-  [(sourceCode)]="sourceCode"
-  (sourceCodeChange)="wasCompiled = false"
-  [highlightBlue]="sim.adr"
-  [highlightGreen]="sim.pc"
-  [highlightPurple]="memoryViewerHoveredAddress"
-  (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
-></app-code-editor>
-
-<div class="whitespace-pre-line">
-  outputBuffer:
-  {{ sim.outputBuffer }}
-</div>
-
-<div class="font-thin">
-  <div>Acc: {{ toHex(sim.acc) }}</div>
-  <div class="text-blue-500">Adr: {{ toHex(sim.adr) }}</div>
-  <div class="text-green-500">Pc: {{ toHex(sim.pc) }}</div>
-  <div>Pc: {{ toHex(sim.stackPointer) }}</div>
-  <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
-  <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
-</div>
-
-<div class="flex gap-2 p-2">
-  <app-memory-viewer
-    [uint16Array]="sim.memory"
-    [blockSize]="64"
+    [compiled]="wasCompiled"
+    [parserOutput]="parserOutput"
+    [(sourceCode)]="sourceCode"
+    (sourceCodeChange)="wasCompiled = false"
     [highlightBlue]="sim.adr"
     [highlightGreen]="sim.pc"
-    [highlightPurple]="sourceCodeHoveredAddress"
-    (hoveredAddressChange)="memoryViewerHoveredAddress = $event"
-  ></app-memory-viewer>
+    [highlightPurple]="memoryViewerHoveredAddress"
+    (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
+  ></app-code-editor>
 
-  <app-memory-viewer
-    [uint16Array]="sim.stack"
-    [blockSize]="16"
-    [wordsPerRow]="1"
-    [maxAddress]="256"
-    [label]="'Stack viewer'"
-    [highlightBlue]="sim.stackPointer"
-  ></app-memory-viewer>
+  <div class="font-thin">
+    <div>Acc: {{ toHex(sim.acc) }}</div>
+    <div class="text-blue-500">Adr: {{ toHex(sim.adr) }}</div>
+    <div class="text-green-500">Pc: {{ toHex(sim.pc) }}</div>
+    <div>Pc: {{ toHex(sim.stackPointer) }}</div>
+    <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
+    <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
+  </div>
+
+  <div class="flex gap-2 p-2">
+    <app-memory-viewer
+      [uint16Array]="sim.memory"
+      [blockSize]="64"
+      [highlightBlue]="sim.adr"
+      [highlightGreen]="sim.pc"
+      [highlightPurple]="sourceCodeHoveredAddress"
+      (hoveredAddressChange)="memoryViewerHoveredAddress = $event"
+    ></app-memory-viewer>
+
+    <app-memory-viewer
+      [uint16Array]="sim.stack"
+      [blockSize]="16"
+      [wordsPerRow]="1"
+      [maxAddress]="256"
+      [label]="'Stack viewer'"
+      [highlightBlue]="sim.stackPointer"
+    ></app-memory-viewer>
+  </div>
+
+  <div class="whitespace-pre-line h-32 bg-gray-100 col-span-2">
+    outputBuffer:
+    {{ sim.outputBuffer }}
+  </div>
 </div>
