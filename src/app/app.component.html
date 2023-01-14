@@ -10,7 +10,7 @@
       [disabled]="sim.simRunning"
       matTooltip="Compile and load source code"
     >
-      <mat-icon>build</mat-icon>
+      <mat-icon class="min-w-fit">build</mat-icon>
       Compile
     </button>
 
@@ -21,7 +21,7 @@
       [disabled]="!wasCompiled || sim.simRunning"
       matTooltip="Reset CPU"
     >
-      <mat-icon>restart_alt</mat-icon>
+      <mat-icon class="min-w-fit">restart_alt</mat-icon>
       Restart
     </button>
 
@@ -32,7 +32,7 @@
       [disabled]="!wasCompiled || sim.simRunning"
       matTooltip="Single step CPU"
     >
-      <mat-icon>skip_next</mat-icon>
+      <mat-icon class="min-w-fit">skip_next</mat-icon>
       Single step
     </button>
 
@@ -43,10 +43,10 @@
       [disabled]="!wasCompiled"
       [matTooltip]="sim.simRunning ? 'Stop CPU' : 'Run CPU'"
     >
-      <mat-icon *ngIf="!sim.simRunning">play_arrow</mat-icon>
+      <mat-icon class="min-w-fit" *ngIf="!sim.simRunning">play_arrow</mat-icon>
       <span *ngIf="!sim.simRunning">Start</span>
 
-      <mat-icon *ngIf="sim.simRunning">stop</mat-icon>
+      <mat-icon class="min-w-fit" *ngIf="sim.simRunning">stop</mat-icon>
       <span *ngIf="sim.simRunning">Stop</span>
     </button>
 
