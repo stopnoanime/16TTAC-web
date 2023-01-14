@@ -131,29 +131,117 @@ export default class OneSixTtacMode extends ace.acequire('ace/mode/text').Mode {
       },
     ];
   }
+
+  createWorker(session: ace.IEditSession) {
+    const WorkerClient = ace.acequire(
+      'ace/worker/worker_client'
+    ).UIWorkerClient;
+    const worker = new WorkerClient(
+      ['ace'],
+      'ace/mode/16ttac-worker',
+      'WorkerModule'
+    );
+    worker.attachToDocument(session.getDocument());
+
+    worker.on('lint', function (results: any) {
+      session.setAnnotations(results.data);
+    });
+
+    worker.on('terminate', function () {
+      session.clearAnnotations();
+    });
+
+    return worker;
+  }
 }
 
-export function validateSyntax(
-  code: string,
-  editor: ace.Editor,
-  parser: Parser
-) {
-  editor.session.clearAnnotations();
+export class Mirror {
+  sender: any;
+  doc: ace.Document;
+  deferredUpdate: any;
+  $timeout = 500;
 
-  try {
-    parser.parse(code);
-  } catch (e) {
-    if (e instanceof ParserError) {
-      const pos = editor.session.doc.indexToPosition(e.sourcePosition, 0);
+  constructor(sender: any) {
+    const Range = ace.acequire('ace/range').Range;
+    const Document = ace.acequire('ace/document').Document;
+    const lang = ace.acequire('ace/lib/lang');
 
-      editor.session.setAnnotations([
-        {
-          row: pos.row,
-          column: pos.column,
-          text: e.message,
-          type: 'error',
-        },
-      ]);
+    this.sender = sender;
+    var doc = (this.doc = new Document(''));
+    var deferredUpdate = (this.deferredUpdate = lang.delayedCall(
+      this.onUpdate.bind(this)
+    ));
+
+    sender.on('change', (e: any) => {
+      var data = e.data;
+      if (data[0].start) {
+        doc.applyDeltas(data);
+      } else {
+        for (var i = 0; i < data.length; i += 2) {
+          if (Array.isArray(data[i + 1])) {
+            var d: any = {
+              action: 'insert',
+              start: data[i],
+              lines: data[i + 1],
+            };
+          } else {
+            var d: any = { action: 'remove', start: data[i], end: data[i + 1] };
+          }
+          doc.applyDelta(d, true);
+        }
+      }
+      if (this.$timeout) return deferredUpdate.schedule(this.$timeout);
+      this.onUpdate();
+    });
+  }
+
+  setTimeout(timeout: number) {
+    this.$timeout = timeout;
+  }
+
+  setValue(value: string) {
+    this.doc.setValue(value);
+    this.deferredUpdate.schedule(this.$timeout);
+  }
+
+  getValue(callbackId: number) {
+    this.sender.callback(this.doc.getValue(), callbackId);
+  }
+
+  onUpdate() {}
+
+  isPending() {
+    return this.deferredUpdate.isPending();
+  }
+}
+
+export class OneSixTtacWorker extends Mirror {
+  private parser = new Parser();
+
+  constructor(sender: any) {
+    super(sender);
+  }
+
+  override onUpdate() {
+    try {
+      this.parser.parse(this.doc.getValue());
+    } catch (e) {
+      if (e instanceof ParserError) {
+        const pos = this.doc.indexToPosition(e.sourcePosition, 0);
+
+        this.sender.emit('lint', [
+          {
+            row: pos.row,
+            column: pos.column,
+            text: e.message,
+            type: 'error',
+          },
+        ]);
+        return;
+      }
     }
+
+    //No errors
+    this.sender.emit('lint', []);
   }
 }
