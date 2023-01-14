@@ -56,7 +56,7 @@ export class OneSixTtacHighlightRules extends ace.acequire(
         token: 'keyword',
         regex: new RegExp(
           `(${this.instructions.sources
-            .map((d) => `${d}\\b`)
+            .map((d) => `\\b${d}\\b`)
             .join('|')})(?=\\s*=>)`
         ),
       },
@@ -82,7 +82,7 @@ export class OneSixTtacHighlightRules extends ace.acequire(
     flags: [
       {
         token: 'support.constant',
-        regex: /(\s+c)?(\s+z)?/,
+        regex: /(\s+c\b)?(\s+z\b)?/,
         next: 'start',
       },
     ],
