@@ -41,7 +41,7 @@ export class SimService {
     return this.sim.stackPointer;
   }
 
-  private parser = new Parser();
+  public parser = new Parser();
   private compiler = new Compiler();
   private sim = new Sim({
     outputRawCallback: (n) => {

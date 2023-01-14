@@ -12,10 +12,12 @@ import {
 import { AceComponent, AceConfigInterface } from 'ngx-ace-wrapper';
 import { parserOutput } from '16ttac-sim';
 import { CodeService } from '../code.service';
-import OneSixTtacMode from './OneSixTtacMode';
+import OneSixTtacMode, { validateSyntax } from './OneSixTtacMode';
 import * as ace from 'brace';
 import 'brace/theme/chrome';
 import 'brace/ext/language_tools';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { SimService } from '../sim.service';
 
 @Component({
   selector: 'app-code-editor',
@@ -48,7 +50,10 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild(AceComponent) componentRef?: AceComponent;
   editor!: ace.Editor;
 
-  constructor(private codeService: CodeService) {}
+  constructor(
+    private codeService: CodeService,
+    private simService: SimService
+  ) {}
 
   ngOnInit(): void {
     (ace as any).define('ace/mode/16ttac', { Mode: OneSixTtacMode });
@@ -72,6 +77,11 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.editor = this.componentRef?.directiveRef?.ace() as ace.Editor;
+    this.sourceCodeChange
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe((text) =>
+        validateSyntax(text, this.editor, this.simService.parser)
+      );
   }
 
   onValueChange(): void {

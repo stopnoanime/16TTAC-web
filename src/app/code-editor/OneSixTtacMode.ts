@@ -1,4 +1,4 @@
-import { Instructions } from '16ttac-sim';
+import { Instructions, Parser, ParserError } from '16ttac-sim';
 import * as ace from 'brace';
 
 export class OneSixTtacHighlightRules extends ace.acequire(
@@ -130,5 +130,30 @@ export default class OneSixTtacMode extends ace.acequire('ace/mode/text').Mode {
         meta: 'type',
       },
     ];
+  }
+}
+
+export function validateSyntax(
+  code: string,
+  editor: ace.Editor,
+  parser: Parser
+) {
+  editor.session.clearAnnotations();
+
+  try {
+    parser.parse(code);
+  } catch (e) {
+    if (e instanceof ParserError) {
+      const pos = editor.session.doc.indexToPosition(e.sourcePosition, 0);
+
+      editor.session.setAnnotations([
+        {
+          row: pos.row,
+          column: pos.column,
+          text: e.message,
+          type: 'error',
+        },
+      ]);
+    }
   }
 }
