@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { toHex } from '../toHex';
 
 @Component({
   selector: 'app-memory-viewer',
@@ -7,6 +8,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./memory-viewer.component.scss'],
 })
 export class MemoryViewerComponent implements OnInit {
+  toHex = toHex;
   math = Math;
 
   @Input() uint16Array!: Uint16Array;
@@ -39,13 +41,6 @@ export class MemoryViewerComponent implements OnInit {
         Math.floor(this.addressForm.value! / this.wordsPerRow)
       );
     });
-  }
-
-  toHex(value: number, size?: number) {
-    return value
-      .toString(16)
-      .toUpperCase()
-      .padStart(size ?? 4, '0');
   }
 
   getAddress(row: number, col: number) {

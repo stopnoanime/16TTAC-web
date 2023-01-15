@@ -1,0 +1,69 @@
+<div class="flex gap-3 p-4 items-center">
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="compile.emit()"
+    [disabled]="running"
+    matTooltip="Compile and load source code"
+  >
+    <mat-icon class="min-w-fit">build</mat-icon>
+    Compile
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="reset.emit()"
+    [disabled]="!wasCompiled || running"
+    matTooltip="Reset CPU"
+  >
+    <mat-icon class="min-w-fit">restart_alt</mat-icon>
+    Restart
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="singleStep.emit()"
+    [disabled]="!wasCompiled || running"
+    matTooltip="Single step CPU"
+  >
+    <mat-icon class="min-w-fit">skip_next</mat-icon>
+    Single step
+  </button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="startStop.emit()"
+    [disabled]="!wasCompiled"
+    [matTooltip]="running ? 'Stop CPU' : 'Run CPU'"
+  >
+    <mat-icon class="min-w-fit" *ngIf="!running">play_arrow</mat-icon>
+    <span *ngIf="!running">Start</span>
+
+    <mat-icon class="min-w-fit" *ngIf="running">stop</mat-icon>
+    <span *ngIf="running">Stop</span>
+  </button>
+
+  <span>CPU speed:</span>
+  <mat-slider
+    min="1"
+    max="60"
+    value="1"
+    discrete
+    color="primary"
+    [displayWith]="formatSliderLabel"
+    [disabled]="!wasCompiled || fullSpeed.checked"
+  >
+    <input matSliderThumb (valueChange)="timeoutChange.emit(1000 / $event)" />
+  </mat-slider>
+
+  <mat-checkbox
+    #fullSpeed
+    color="primary"
+    [disabled]="!wasCompiled"
+    (change)="fullSpeedChange.emit($event.checked)"
+    >Full speed</mat-checkbox
+  >
+</div>

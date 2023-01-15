@@ -7,7 +7,7 @@ import { asapScheduler, asyncScheduler } from 'rxjs';
   providedIn: 'root',
 })
 export class SimService {
-  public simTimeout: number = 1000;
+  public timeout: number = 1000;
   public fullSpeed: boolean = false;
 
   public get output() {
@@ -18,11 +18,11 @@ export class SimService {
     this._inputBuffer += s;
   }
 
-  public get simRunning() {
-    return this._simRunning;
+  public get running() {
+    return this._running;
   }
 
-  public get simProp() {
+  public get simProp(): simPropType {
     return {
       acc: this.sim.acc,
       adr: this.sim.adr,
@@ -37,7 +37,7 @@ export class SimService {
 
   private _outputBuffer: string = '';
   private _inputBuffer: string = '';
-  private _simRunning = false;
+  private _running = false;
   private simRunningSubscription!: Subscription;
 
   private parser = new Parser();
@@ -45,7 +45,7 @@ export class SimService {
   private sim = new Sim({
     outputRawCallback: (n) => (this._outputBuffer += String.fromCharCode(n)),
     haltCallback: () => {
-      this._simRunning = false;
+      this._running = false;
       this._outputBuffer += '\nHalting.';
     },
     inputAvailableCallback: () => this._inputBuffer.length > 0,
@@ -75,7 +75,7 @@ export class SimService {
     this.sim.reset();
     this._outputBuffer = '';
     this._inputBuffer = '';
-    this._simRunning = false;
+    this._running = false;
   }
 
   public singleStep() {
@@ -83,24 +83,35 @@ export class SimService {
   }
 
   public startStop() {
-    if (this._simRunning) {
-      this._simRunning = false;
+    if (this._running) {
+      this._running = false;
       this.simRunningSubscription.unsubscribe();
     } else {
-      this._simRunning = true;
+      this._running = true;
       this.runLoop();
     }
   }
 
   private runLoop() {
     for (let i = 0; i < (this.fullSpeed ? 1_000_000 : 1); i++) {
-      if (!this._simRunning) return;
+      if (!this._running) return;
       this.singleStep();
     }
 
     this.simRunningSubscription = asyncScheduler.schedule(
       () => this.runLoop(),
-      this.fullSpeed ? undefined : this.simTimeout
+      this.fullSpeed ? undefined : this.timeout
     );
   }
 }
+
+export type simPropType = {
+  acc: number;
+  adr: number;
+  pc: number;
+  carry: boolean;
+  zero: boolean;
+  memory: Uint16Array;
+  stack: Uint16Array;
+  stackPointer: number;
+};

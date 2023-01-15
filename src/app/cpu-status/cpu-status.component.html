@@ -1,0 +1,8 @@
+<div class="text-gray-600 p-4 bg-gray-100 rounded-md font-thin">
+  <div>Acc: {{ toHex(simProp.acc) }}</div>
+  <div class="text-blue-500">Adr: {{ toHex(simProp.adr) }}</div>
+  <div class="text-green-500">Pc: {{ toHex(simProp.pc) }}</div>
+  <div>Stack Pointer: {{ toHex(simProp.stackPointer) }}</div>
+  <div>Carry Flag: {{ simProp.carry ? "True" : "False" }}</div>
+  <div>Zero Flag: {{ simProp.zero ? "True" : "False" }}</div>
+</div>

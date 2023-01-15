@@ -16,6 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AceModule } from 'ngx-ace-wrapper';
 import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { TerminalComponent } from './terminal/terminal.component';
+import { CpuStatusComponent } from './cpu-status/cpu-status.component';
+import { ControlMenuComponent } from './control-menu/control-menu.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,8 @@ import { TerminalComponent } from './terminal/terminal.component';
     MemoryViewerComponent,
     CodeEditorComponent,
     TerminalComponent,
+    CpuStatusComponent,
+    ControlMenuComponent,
   ],
   imports: [
     BrowserModule,

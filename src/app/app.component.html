@@ -1,83 +1,24 @@
 <div
   class="grid h-screen"
-  style="grid-template-columns: 1fr auto; grid-template-rows: auto 1fr 1fr auto"
+  style="
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto auto auto;
+  "
 >
-  <div class="flex gap-3 p-4 items-center">
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="compile()"
-      [disabled]="sim.simRunning"
-      matTooltip="Compile and load source code"
-    >
-      <mat-icon class="min-w-fit">build</mat-icon>
-      Compile
-    </button>
-
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="sim.reset()"
-      [disabled]="!wasCompiled || sim.simRunning"
-      matTooltip="Reset CPU"
-    >
-      <mat-icon class="min-w-fit">restart_alt</mat-icon>
-      Restart
-    </button>
-
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="sim.singleStep()"
-      [disabled]="!wasCompiled || sim.simRunning"
-      matTooltip="Single step CPU"
-    >
-      <mat-icon class="min-w-fit">skip_next</mat-icon>
-      Single step
-    </button>
-
-    <button
-      mat-flat-button
-      color="primary"
-      (click)="sim.startStop()"
-      [disabled]="!wasCompiled"
-      [matTooltip]="sim.simRunning ? 'Stop CPU' : 'Run CPU'"
-    >
-      <mat-icon class="min-w-fit" *ngIf="!sim.simRunning">play_arrow</mat-icon>
-      <span *ngIf="!sim.simRunning">Start</span>
-
-      <mat-icon class="min-w-fit" *ngIf="sim.simRunning">stop</mat-icon>
-      <span *ngIf="sim.simRunning">Stop</span>
-    </button>
-
-    <span>CPU speed:</span>
-    <mat-slider
-      min="1"
-      max="60"
-      value="1"
-      discrete
-      color="primary"
-      [displayWith]="formatSliderLabel"
-      [disabled]="!wasCompiled || fullSpeed.checked"
-    >
-      <input
-        matSliderThumb
-        (valueChange)="this.sim.simTimeout = 1000 / $event"
-      />
-    </mat-slider>
-
-    <mat-checkbox
-      #fullSpeed
-      color="primary"
-      [disabled]="!wasCompiled"
-      (change)="this.sim.fullSpeed = $event.checked"
-      >Full speed</mat-checkbox
-    >
-  </div>
+  <app-control-menu
+    [wasCompiled]="wasCompiled"
+    [running]="sim.running"
+    (compile)="compile()"
+    (reset)="sim.reset()"
+    (singleStep)="sim.singleStep()"
+    (startStop)="sim.startStop()"
+    (fullSpeedChange)="sim.fullSpeed = $event"
+    (timeoutChange)="sim.timeout = $event"
+  ></app-control-menu>
 
   <app-code-editor
     class="col-start-1 row-span-2"
-    [disabled]="sim.simRunning"
+    [disabled]="sim.running"
     [compiled]="wasCompiled"
     [parserOutput]="parserOutput"
     [(sourceCode)]="sourceCode"
@@ -88,14 +29,7 @@
     (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
   ></app-code-editor>
 
-  <div class="font-thin">
-    <div>Acc: {{ toHex(sim.simProp.acc) }}</div>
-    <div class="text-blue-500">Adr: {{ toHex(sim.simProp.adr) }}</div>
-    <div class="text-green-500">Pc: {{ toHex(sim.simProp.pc) }}</div>
-    <div>Pc: {{ toHex(sim.simProp.stackPointer) }}</div>
-    <div>Carry Flag: {{ sim.simProp.carry ? "True" : "False" }}</div>
-    <div>Zero Flag: {{ sim.simProp.zero ? "True" : "False" }}</div>
-  </div>
+  <app-cpu-status class="p-2" [simProp]="sim.simProp"></app-cpu-status>
 
   <div class="flex gap-2 p-2">
     <app-memory-viewer

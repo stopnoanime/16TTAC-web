@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   memoryViewerHoveredAddress?: number;
   sourceCodeHoveredAddress?: number;
   parserOutput!: parserOutput;
+
   sourceCode = `
   word string[10] = "61293"
 
@@ -87,14 +88,6 @@ export class AppComponent implements OnInit {
   `;
 
   ngOnInit() {}
-
-  formatSliderLabel(value: number): string {
-    return `${value}Hz`;
-  }
-
-  toHex(value: number) {
-    return '0x' + ('0000' + value.toString(16).toUpperCase()).slice(-4);
-  }
 
   compile() {
     const parserOutput = this.sim.compile(this.sourceCode);
