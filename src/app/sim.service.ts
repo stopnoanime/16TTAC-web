@@ -7,54 +7,69 @@ import { asapScheduler, asyncScheduler } from 'rxjs';
   providedIn: 'root',
 })
 export class SimService {
-  public outputBuffer: string = '';
+
   public simTimeout: number = 1000;
   public fullSpeed: boolean = false;
+
+  public get output() {
+    return this._outputBuffer;
+  }
+
+  public set input(s : string) {
+    this._inputBuffer += s;
+  }
+
   public get simRunning() {
     return this._simRunning;
   }
 
-  public get acc() {
-    return this.sim.acc;
-  }
-  public get adr() {
-    return this.sim.adr;
-  }
-  public get pc() {
-    return this.sim.pc;
-  }
-  public get carry() {
-    return this.sim.carry;
-  }
-  public get zero() {
-    return this.sim.zero;
+  public get simProp() {
+    return {
+      acc: this.sim.acc,
+      adr: this.sim.adr,
+      pc: this.sim.pc,
+      carry: this.sim.carry,
+      zero: this.sim.zero,
+      memory: this.sim.memory,
+      stack: this.sim.stack,
+      stackPointer: this.sim.stackPointer
+    }
   }
 
-  public get memory() {
-    return this.sim.memory;
-  }
-
-  public get stack() {
-    return this.sim.stack;
-  }
-  public get stackPointer() {
-    return this.sim.stackPointer;
-  }
+  private _outputBuffer: string = '';
+  private _inputBuffer: string = '';
+  private _simRunning = false;
+  private simRunningSubscription!: Subscription;
 
   private parser = new Parser();
   private compiler = new Compiler();
   private sim = new Sim({
     outputRawCallback: (n) => {
-      this.outputBuffer += String.fromCharCode(n);
+      switch (n) {
+        case 0x7f: //Backspace
+          this._outputBuffer += "\b \b";
+        break;
+
+        case 0x0d: //Enter
+        case 0x0a: //Enter
+          this._outputBuffer += "\n";
+        break;
+
+        default:
+          this._outputBuffer += String.fromCharCode(n);
+      }
     },
     haltCallback: () => {
       this._simRunning = false;
-      this.outputBuffer += '\nHalting.';
+      this._outputBuffer += '\nHalting.';
+    },
+    inputAvailableCallback: () => this._inputBuffer.length > 0,
+    inputRawCallback: () =>  {
+      const char = this._inputBuffer.charCodeAt(0);
+      this._inputBuffer = this._inputBuffer.substring(1)
+      return char
     },
   });
-
-  private _simRunning = false;
-  private simRunningSubscription!: Subscription;
 
   constructor() {}
 
@@ -66,14 +81,15 @@ export class SimService {
       this.sim.initializeMemory(this.compiler.compile(parserOutput));
       return parserOutput;
     } catch (e: any) {
-      this.outputBuffer += e.message;
+      this._outputBuffer = e.message;
       return null;
     }
   }
 
   public reset() {
     this.sim.reset();
-    this.outputBuffer = '';
+    this._outputBuffer = '';
+    this._inputBuffer = '';
     this._simRunning = false;
   }
 

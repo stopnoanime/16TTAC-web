@@ -15,9 +15,10 @@ import { MemoryViewerComponent } from './memory-viewer/memory-viewer.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AceModule } from 'ngx-ace-wrapper';
 import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { TerminalComponent } from './terminal/terminal.component';
 
 @NgModule({
-  declarations: [AppComponent, MemoryViewerComponent, CodeEditorComponent],
+  declarations: [AppComponent, MemoryViewerComponent, CodeEditorComponent, TerminalComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

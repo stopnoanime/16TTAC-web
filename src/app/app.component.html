@@ -82,42 +82,40 @@
     [parserOutput]="parserOutput"
     [(sourceCode)]="sourceCode"
     (sourceCodeChange)="wasCompiled = false"
-    [highlightBlue]="sim.adr"
-    [highlightGreen]="sim.pc"
+    [highlightBlue]="sim.simProp.adr"
+    [highlightGreen]="sim.simProp.pc"
     [highlightPurple]="memoryViewerHoveredAddress"
     (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
   ></app-code-editor>
 
   <div class="font-thin">
-    <div>Acc: {{ toHex(sim.acc) }}</div>
-    <div class="text-blue-500">Adr: {{ toHex(sim.adr) }}</div>
-    <div class="text-green-500">Pc: {{ toHex(sim.pc) }}</div>
-    <div>Pc: {{ toHex(sim.stackPointer) }}</div>
-    <div>Carry Flag: {{ sim.carry ? "True" : "False" }}</div>
-    <div>Zero Flag: {{ sim.zero ? "True" : "False" }}</div>
+    <div>Acc: {{ toHex(sim.simProp.acc) }}</div>
+    <div class="text-blue-500">Adr: {{ toHex(sim.simProp.adr) }}</div>
+    <div class="text-green-500">Pc: {{ toHex(sim.simProp.pc) }}</div>
+    <div>Pc: {{ toHex(sim.simProp.stackPointer) }}</div>
+    <div>Carry Flag: {{ sim.simProp.carry ? "True" : "False" }}</div>
+    <div>Zero Flag: {{ sim.simProp.zero ? "True" : "False" }}</div>
   </div>
 
   <div class="flex gap-2 p-2">
     <app-memory-viewer
-      [uint16Array]="sim.memory"
+      [uint16Array]="sim.simProp.memory"
       [blockSize]="64"
-      [highlightBlue]="sim.adr"
-      [highlightGreen]="sim.pc"
+      [highlightBlue]="sim.simProp.adr"
+      [highlightGreen]="sim.simProp.pc"
       [highlightPurple]="sourceCodeHoveredAddress"
       (hoveredAddressChange)="memoryViewerHoveredAddress = $event"
     ></app-memory-viewer>
 
     <app-memory-viewer
-      [uint16Array]="sim.stack"
+      [uint16Array]="sim.simProp.stack"
       [blockSize]="16"
       [wordsPerRow]="1"
       [maxAddress]="256"
       [label]="'Stack viewer'"
-      [highlightBlue]="sim.stackPointer"
+      [highlightBlue]="sim.simProp.stackPointer"
     ></app-memory-viewer>
   </div>
 
-  <div class="whitespace-pre-line h-32 bg-gray-100 col-span-2">
-    {{ sim.outputBuffer }}
-  </div>
+  <app-terminal class="h-80 col-span-2" [output]="sim.output" (input)="sim.input = $event"></app-terminal>
 </div>
