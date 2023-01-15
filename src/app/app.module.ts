@@ -18,7 +18,12 @@ import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { TerminalComponent } from './terminal/terminal.component';
 
 @NgModule({
-  declarations: [AppComponent, MemoryViewerComponent, CodeEditorComponent, TerminalComponent],
+  declarations: [
+    AppComponent,
+    MemoryViewerComponent,
+    CodeEditorComponent,
+    TerminalComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

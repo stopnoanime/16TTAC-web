@@ -117,5 +117,9 @@
     ></app-memory-viewer>
   </div>
 
-  <app-terminal class="h-80 col-span-2" [output]="sim.output" (input)="sim.input = $event"></app-terminal>
+  <app-terminal
+    class="h-80 col-span-2"
+    [output]="sim.output"
+    (input)="sim.input = $event"
+  ></app-terminal>
 </div>

@@ -7,7 +7,6 @@ import { asapScheduler, asyncScheduler } from 'rxjs';
   providedIn: 'root',
 })
 export class SimService {
-
   public simTimeout: number = 1000;
   public fullSpeed: boolean = false;
 
@@ -15,7 +14,7 @@ export class SimService {
     return this._outputBuffer;
   }
 
-  public set input(s : string) {
+  public set input(s: string) {
     this._inputBuffer += s;
   }
 
@@ -32,8 +31,8 @@ export class SimService {
       zero: this.sim.zero,
       memory: this.sim.memory,
       stack: this.sim.stack,
-      stackPointer: this.sim.stackPointer
-    }
+      stackPointer: this.sim.stackPointer,
+    };
   }
 
   private _outputBuffer: string = '';
@@ -44,30 +43,16 @@ export class SimService {
   private parser = new Parser();
   private compiler = new Compiler();
   private sim = new Sim({
-    outputRawCallback: (n) => {
-      switch (n) {
-        case 0x7f: //Backspace
-          this._outputBuffer += "\b \b";
-        break;
-
-        case 0x0d: //Enter
-        case 0x0a: //Enter
-          this._outputBuffer += "\n";
-        break;
-
-        default:
-          this._outputBuffer += String.fromCharCode(n);
-      }
-    },
+    outputRawCallback: (n) => (this._outputBuffer += String.fromCharCode(n)),
     haltCallback: () => {
       this._simRunning = false;
       this._outputBuffer += '\nHalting.';
     },
     inputAvailableCallback: () => this._inputBuffer.length > 0,
-    inputRawCallback: () =>  {
+    inputRawCallback: () => {
       const char = this._inputBuffer.charCodeAt(0);
-      this._inputBuffer = this._inputBuffer.substring(1)
-      return char
+      this._inputBuffer = this._inputBuffer.substring(1);
+      return char;
     },
   });
 
