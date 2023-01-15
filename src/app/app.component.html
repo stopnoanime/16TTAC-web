@@ -53,7 +53,8 @@
 
   <app-terminal
     class="h-80 col-span-2"
-    [output]="sim.output"
+    [outputEvent]="sim.outputEvent"
+    [clearEvent]="sim.clearEvent"
     (input)="sim.input = $event"
   ></app-terminal>
 </div>

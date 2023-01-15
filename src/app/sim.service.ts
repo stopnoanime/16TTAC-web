@@ -1,6 +1,6 @@
 import { Compiler, Parser, Sim } from '16ttac-sim';
 import { Injectable } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
+import { Subject, Subscription, timer } from 'rxjs';
 import { asapScheduler, asyncScheduler } from 'rxjs';
 
 @Injectable({
@@ -10,9 +10,8 @@ export class SimService {
   public timeout: number = 1000;
   public fullSpeed: boolean = false;
 
-  public get output() {
-    return this._outputBuffer;
-  }
+  public outputEvent = new Subject<string>();
+  public clearEvent = new Subject<void>();
 
   public set input(s: string) {
     this._inputBuffer += s;
@@ -35,7 +34,6 @@ export class SimService {
     };
   }
 
-  private _outputBuffer: string = '';
   private _inputBuffer: string = '';
   private _running = false;
   private simRunningSubscription!: Subscription;
@@ -43,10 +41,10 @@ export class SimService {
   private parser = new Parser();
   private compiler = new Compiler();
   private sim = new Sim({
-    outputRawCallback: (n) => (this._outputBuffer += String.fromCharCode(n)),
+    outputRawCallback: (n) => this.outputEvent.next(String.fromCharCode(n)),
     haltCallback: () => {
       this._running = false;
-      this._outputBuffer += '\nHalting.';
+      this.outputEvent.next('\nHalting.');
     },
     inputAvailableCallback: () => this._inputBuffer.length > 0,
     inputRawCallback: () => {
@@ -66,14 +64,14 @@ export class SimService {
       this.sim.initializeMemory(this.compiler.compile(parserOutput));
       return parserOutput;
     } catch (e: any) {
-      this._outputBuffer = e.message;
+      this.outputEvent.next(e.message);
       return null;
     }
   }
 
   public reset() {
     this.sim.reset();
-    this._outputBuffer = '';
+    this.clearEvent.next();
     this._inputBuffer = '';
     this._running = false;
   }

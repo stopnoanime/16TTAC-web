@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 
@@ -17,8 +18,9 @@ import { FitAddon } from 'xterm-addon-fit';
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss'],
 })
-export class TerminalComponent implements AfterViewInit, OnChanges {
-  @Input() output?: string;
+export class TerminalComponent implements AfterViewInit {
+  @Input() outputEvent?: Subject<string>;
+  @Input() clearEvent?: Subject<void>;
   @Output() input = new EventEmitter<string>();
 
   @ViewChild('terminal') terminalRef?: ElementRef;
@@ -29,11 +31,6 @@ export class TerminalComponent implements AfterViewInit, OnChanges {
   });
   fitAddon = new FitAddon();
 
-  ngOnChanges(changes: SimpleChanges): void {
-    this.terminal.reset();
-    this.terminal.write(this.output || '');
-  }
-
   ngAfterViewInit(): void {
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.open(this.terminalRef?.nativeElement);
@@ -42,5 +39,8 @@ export class TerminalComponent implements AfterViewInit, OnChanges {
     this.terminal.onData((s) => {
       this.input.emit(s);
     });
+
+    this.outputEvent?.subscribe((s) => this.terminal.write(s));
+    this.clearEvent?.subscribe((_) => this.terminal.reset());
   }
 }
