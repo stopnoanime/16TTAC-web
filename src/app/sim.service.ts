@@ -60,11 +60,15 @@ export class SimService {
 
   public compile(sourceCode: string) {
     this.reset();
-    const parserOutput = this.parser.parse(sourceCode);
 
-    this.sim.initializeMemory(this.compiler.compile(parserOutput));
-
-    return parserOutput;
+    try {
+      const parserOutput = this.parser.parse(sourceCode);
+      this.sim.initializeMemory(this.compiler.compile(parserOutput));
+      return parserOutput;
+    } catch (e: any) {
+      this.outputBuffer += e.message;
+      return null;
+    }
   }
 
   public reset() {

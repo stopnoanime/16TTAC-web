@@ -97,7 +97,10 @@ export class AppComponent implements OnInit {
   }
 
   compile() {
-    this.parserOutput = this.sim.compile(this.sourceCode);
+    const parserOutput = this.sim.compile(this.sourceCode);
+    if (parserOutput === null) return; //Could not compile
+
+    this.parserOutput = parserOutput;
     this.wasCompiled = true;
   }
 }
