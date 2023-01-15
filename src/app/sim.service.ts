@@ -1,7 +1,8 @@
-import { Compiler, Parser, Sim } from '16ttac-sim';
+import { Compiler, Parser, parserOutput, Sim } from '16ttac-sim';
 import { Injectable } from '@angular/core';
 import { Subject, Subscription, timer } from 'rxjs';
 import { asapScheduler, asyncScheduler } from 'rxjs';
+import { CodeService } from './code.service';
 
 @Injectable({
   providedIn: 'root',
@@ -9,6 +10,7 @@ import { asapScheduler, asyncScheduler } from 'rxjs';
 export class SimService {
   public timeout: number = 1000;
   public fullSpeed: boolean = false;
+  public breakpoints: { [key: number]: [number, number] } = {};
 
   public outputEvent = new Subject<string>();
   public clearEvent = new Subject<void>();
@@ -39,6 +41,7 @@ export class SimService {
   private simRunningSubscription!: Subscription;
 
   private parser = new Parser();
+  private parserOutput!: parserOutput;
   private compiler = new Compiler();
   private sim = new Sim({
     outputRawCallback: (n) => this.outputEvent.next(String.fromCharCode(n)),
@@ -54,15 +57,15 @@ export class SimService {
     },
   });
 
-  constructor() {}
+  constructor(private codeService: CodeService) {}
 
   public compile(sourceCode: string) {
     this.reset();
 
     try {
-      const parserOutput = this.parser.parse(sourceCode);
-      this.sim.initializeMemory(this.compiler.compile(parserOutput));
-      return parserOutput;
+      this.parserOutput = this.parser.parse(sourceCode);
+      this.sim.initializeMemory(this.compiler.compile(this.parserOutput));
+      return this.parserOutput;
     } catch (e: any) {
       this.outputEvent.next(e.message);
       return null;
@@ -78,6 +81,7 @@ export class SimService {
 
   public singleStep() {
     this.sim.singleStep();
+    this.checkBreakpoints();
   }
 
   public startStop() {
@@ -100,6 +104,30 @@ export class SimService {
       () => this.runLoop(),
       this.fullSpeed ? undefined : this.timeout
     );
+  }
+
+  private checkBreakpoints() {
+    if (Object.keys(this.breakpoints).length === 0) return;
+
+    const addressSourceRange =
+      this.codeService.getSourceCodeIndexRangeForAddress(
+        this.simProp.pc,
+        this.parserOutput
+      );
+    if (!addressSourceRange) return;
+
+    for (const key in this.breakpoints) {
+      if (
+        this.breakpoints[key][0] <= addressSourceRange[1] &&
+        addressSourceRange[0] <= this.breakpoints[key][1]
+      ) {
+        this._running = false;
+        this.outputEvent.next(
+          `\nBreakpoint at line ${key} and address ${this.simProp.pc}.`
+        );
+        return;
+      }
+    }
   }
 }
 

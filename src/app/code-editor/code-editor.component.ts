@@ -36,6 +36,11 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() hoveredAddressChange = new EventEmitter<number>();
 
+  private breakpoints: { [key: number]: [number, number] } = {};
+  @Output() breakpointsChange = new EventEmitter<{
+    [key: number]: [number, number];
+  }>();
+
   config: AceConfigInterface = {
     mode: '16ttac',
     theme: 'chrome',
@@ -76,10 +81,31 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.editor = this.componentRef?.directiveRef?.ace() as ace.Editor;
+    this.editor.on('guttermousedown', (e) => {
+      const row = e.getDocumentPosition().row;
+      const editorBreakpoints = this.editor.session.getBreakpoints();
+
+      if (!editorBreakpoints[row]) {
+        this.editor.session.setBreakpoint(row, 'ace_breakpoint');
+        this.breakpoints[row] = this.getBreakpointRangeForRow(row);
+      } else {
+        this.editor.session.clearBreakpoint(row);
+        delete this.breakpoints[row];
+      }
+
+      this.breakpointsChange.emit(this.breakpoints);
+
+      e.stop();
+    });
   }
 
   onValueChange(): void {
     this.sourceCodeChange.emit(this.sourceCode);
+
+    //Recalculate breakpoints
+    for (const key in this.breakpoints) {
+      this.breakpoints[key] = this.getBreakpointRangeForRow(Number(key));
+    }
   }
 
   outputHoveredAddress(x: number, y: number) {
@@ -147,5 +173,13 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
       endPosition.row,
       endPosition.column
     );
+  }
+
+  private getBreakpointRangeForRow(row: number): [number, number] {
+    return [
+      this.editor.session.doc.positionToIndex({ column: 0, row: row }, 0),
+      this.editor.session.doc.positionToIndex({ column: 0, row: row + 1 }, 0) -
+        1,
+    ];
   }
 }

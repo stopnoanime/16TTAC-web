@@ -27,6 +27,7 @@
     [highlightGreen]="sim.simProp.pc"
     [highlightPurple]="memoryViewerHoveredAddress"
     (hoveredAddressChange)="sourceCodeHoveredAddress = $event"
+    (breakpointsChange)="sim.breakpoints = $event"
   ></app-code-editor>
 
   <app-cpu-status class="p-2" [simProp]="sim.simProp"></app-cpu-status>
