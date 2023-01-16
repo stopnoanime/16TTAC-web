@@ -1,4 +1,4 @@
-<div class="flex gap-3 p-2 items-center flex-wrap">
+<div class="flex gap-3 p-2 py-1 items-center flex-wrap bg-neutral-600">
   <button
     mat-flat-button
     color="primary"
@@ -47,7 +47,11 @@
   </button>
 
   <div class="z-10">
-    <span class="mr-4">CPU speed:</span>
+    <span
+      class="mr-4 text-white"
+      [class.opacity-50]="!wasCompiled || fullSpeed.checked"
+      >CPU speed:</span
+    >
     <mat-slider
       min="1"
       max="60"
@@ -76,7 +80,7 @@
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="wh-8 h-8"
+      class="wh-8 h-8 invert"
       viewBox="0 0 24 24"
     >
       <path

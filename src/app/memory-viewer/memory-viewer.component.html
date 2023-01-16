@@ -1,4 +1,4 @@
-<div class="font-mono text-gray-700 p-4 bg-gray-50 w-min rounded-md">
+<div class="font-mono text-neutral-100 p-4 bg-neutral-700 w-min">
   <h3>{{ label }}</h3>
 
   <div class="flex">
@@ -25,7 +25,7 @@
       *ngFor="let _ of [].constructor(blockSize / wordsPerRow); index as row"
       class="flex gap-2"
     >
-      <span class="text-gray-900">
+      <span class="text-neutral-300">
         {{
           "0x" + toHex(getAddress(row, 0), math.ceil(math.log2(maxAddress) / 4))
         }}

@@ -1,4 +1,4 @@
-<div class="grid main-grid min-h-screen" style="background-color: #ebebeb">
+<div class="grid main-grid min-h-screen bg-neutral-700">
   <app-control-menu
     class="sm:col-span-2"
     [wasCompiled]="wasCompiled"
@@ -26,15 +26,17 @@
   ></app-code-editor>
 
   <app-terminal
-    class="sm:col-span-2 lg:row-start-4"
+    class="sm:col-span-2 lg:row-start-4 border-t border-neutral-600"
     [outputEvent]="sim.outputEvent"
     [clearEvent]="sim.clearEvent"
     (input)="sim.input = $event"
   ></app-terminal>
 
-  <app-cpu-status class="p-2 lg:py-0" [simProp]="sim.simProp"></app-cpu-status>
+  <app-cpu-status [simProp]="sim.simProp"></app-cpu-status>
 
-  <div class="flex gap-2 p-2 flex-wrap justify-center">
+  <div
+    class="flex flex-wrap justify-center border-t sm:border-l sm:border-t-0 lg:border-t lg:border-l-0 border-neutral-500"
+  >
     <app-memory-viewer
       [uint16Array]="sim.simProp.memory"
       [blockSize]="64"

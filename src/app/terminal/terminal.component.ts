@@ -30,7 +30,8 @@ export class TerminalComponent implements AfterViewInit {
     cursorBlink: true,
     rows: 17,
     theme: {
-      background: '#15181f',
+      background: '#262626',
+      cursorAccent: '#262626',
     },
   });
   fitAddon = new FitAddon();
