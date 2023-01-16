@@ -1,8 +1,5 @@
-<div
-  class="font-mono text-gray-600 p-4 bg-gray-100 w-min rounded-md"
-  (wheel)="onWheel($event)"
->
-  <h3 matTooltip="Scroll to change address">{{ label }}</h3>
+<div class="font-mono text-gray-600 p-4 bg-gray-100 w-min rounded-md">
+  <h3>{{ label }}</h3>
 
   <div class="flex">
     <mat-form-field class="w-28 flex-grow">
@@ -19,34 +16,41 @@
   </div>
 
   <div
-    *ngFor="let _ of [].constructor(blockSize / wordsPerRow); index as row"
-    class="flex gap-2"
+    matTooltip="Scroll to change address"
+    (wheel)="onWheel($event)"
+    (panstart)="pan($event)"
+    (pan)="pan($event)"
   >
-    <span class="text-gray-900">
-      {{
-        "0x" + toHex(getAddress(row, 0), math.ceil(math.log2(maxAddress) / 4))
-      }}
-    </span>
     <div
-      class="relative"
-      *ngFor="let _ of [].constructor(wordsPerRow); index as column"
-      (mouseenter)="hoveredAddressChange.emit(getAddress(row, column))"
-      (mouseleave)="hoveredAddressChange.emit(undefined)"
+      *ngFor="let _ of [].constructor(blockSize / wordsPerRow); index as row"
+      class="flex gap-2"
     >
+      <span class="text-gray-900">
+        {{
+          "0x" + toHex(getAddress(row, 0), math.ceil(math.log2(maxAddress) / 4))
+        }}
+      </span>
       <div
-        *ngIf="highlightBlue === getAddress(row, column)"
-        class="bg-blue-500 highlightOverlay"
-      ></div>
-      <div
-        *ngIf="highlightGreen === getAddress(row, column)"
-        class="bg-green-500 highlightOverlay"
-      ></div>
-      <div
-        *ngIf="highlightPurple === getAddress(row, column)"
-        class="bg-purple-500 highlightOverlay"
-      ></div>
+        class="relative"
+        *ngFor="let _ of [].constructor(wordsPerRow); index as column"
+        (mouseenter)="hoveredAddressChange.emit(getAddress(row, column))"
+        (mouseleave)="hoveredAddressChange.emit(undefined)"
+      >
+        <div
+          *ngIf="highlightBlue === getAddress(row, column)"
+          class="bg-blue-500 highlightOverlay"
+        ></div>
+        <div
+          *ngIf="highlightGreen === getAddress(row, column)"
+          class="bg-green-500 highlightOverlay"
+        ></div>
+        <div
+          *ngIf="highlightPurple === getAddress(row, column)"
+          class="bg-purple-500 highlightOverlay"
+        ></div>
 
-      {{ toHex(uint16Array[getAddress(row, column)]) }}
+        {{ toHex(uint16Array[getAddress(row, column)]) }}
+      </div>
     </div>
   </div>
 </div>

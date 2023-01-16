@@ -49,14 +49,22 @@ export class MemoryViewerComponent implements OnInit {
 
   onWheel(event: WheelEvent) {
     event.preventDefault();
+    this.updateRowOffset(this.rowOffset + (event.deltaY > 0 ? 1 : -1));
+  }
 
-    if (event.deltaY > 0) this.rowOffset += 1;
-    if (event.deltaY < 0) this.rowOffset -= 1;
+  private startRowOffset: number = 0;
+  pan(event: any) {
+    if (event.type == 'panstart') this.startRowOffset = this.rowOffset;
+    this.updateRowOffset(this.startRowOffset - Math.round(event.deltaY / 20));
+  }
 
+  private updateRowOffset(newRowOffset: number) {
     this.rowOffset = Math.min(
       (this.maxAddress - this.blockSize) / this.wordsPerRow,
-      Math.max(0, this.rowOffset)
+      Math.max(0, newRowOffset)
     );
-    this.addressForm.setValue(this.rowOffset * this.wordsPerRow);
+    this.addressForm.setValue(this.rowOffset * this.wordsPerRow, {
+      emitEvent: false,
+    });
   }
 }

@@ -1,5 +1,9 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { Injectable, NgModule } from '@angular/core';
+import {
+  BrowserModule,
+  HammerGestureConfig,
+  HAMMER_GESTURE_CONFIG,
+} from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +22,17 @@ import { CodeEditorComponent } from './code-editor/code-editor.component';
 import { TerminalComponent } from './terminal/terminal.component';
 import { CpuStatusComponent } from './cpu-status/cpu-status.component';
 import { ControlMenuComponent } from './control-menu/control-menu.component';
+import { HammerModule } from '@angular/platform-browser';
+import { DIRECTION_VERTICAL } from 'hammerjs';
+
+@Injectable()
+export class CustomHammerConfig extends HammerGestureConfig {
+  override overrides = {
+    pan: {
+      direction: DIRECTION_VERTICAL,
+    },
+  };
+}
 
 @NgModule({
   declarations: [
@@ -41,8 +56,9 @@ import { ControlMenuComponent } from './control-menu/control-menu.component';
     MatSliderModule,
     MatCheckboxModule,
     AceModule,
+    HammerModule,
   ],
-  providers: [],
+  providers: [{ provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -123,7 +123,9 @@ export class SimService {
       ) {
         this._running = false;
         this.outputEvent.next(
-          `\nBreakpoint at line ${Number(key) + 1} and address ${this.simProp.pc}.`
+          `\nBreakpoint at line ${Number(key) + 1} and address ${
+            this.simProp.pc
+          }.`
         );
         return;
       }
