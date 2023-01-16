@@ -1,0 +1,10 @@
+@media (min-width: 640px) {
+  .main-grid {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto auto;
+  }
+}
+
+app-code-editor {
+  min-height: 300px;
+}

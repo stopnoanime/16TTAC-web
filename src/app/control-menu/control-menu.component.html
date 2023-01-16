@@ -1,4 +1,4 @@
-<div class="flex gap-3 p-4 items-center">
+<div class="flex gap-3 p-2 items-center flex-wrap">
   <button
     mat-flat-button
     color="primary"
@@ -46,18 +46,20 @@
     <span *ngIf="running">Stop</span>
   </button>
 
-  <span>CPU speed:</span>
-  <mat-slider
-    min="1"
-    max="60"
-    value="1"
-    discrete
-    color="primary"
-    [displayWith]="formatSliderLabel"
-    [disabled]="!wasCompiled || fullSpeed.checked"
-  >
-    <input matSliderThumb (valueChange)="timeoutChange.emit(1000 / $event)" />
-  </mat-slider>
+  <div>
+    <span class="mr-4">CPU speed:</span>
+    <mat-slider
+      min="1"
+      max="60"
+      value="1"
+      discrete
+      color="primary"
+      [displayWith]="formatSliderLabel"
+      [disabled]="!wasCompiled || fullSpeed.checked"
+    >
+      <input matSliderThumb (valueChange)="timeoutChange.emit(1000 / $event)" />
+    </mat-slider>
+  </div>
 
   <mat-checkbox
     #fullSpeed

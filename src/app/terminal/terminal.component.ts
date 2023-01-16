@@ -28,17 +28,26 @@ export class TerminalComponent implements AfterViewInit {
   terminal = new Terminal({
     convertEol: true,
     cursorBlink: true,
+    rows: 17,
+    theme: {
+      background: '#15181f',
+    },
   });
   fitAddon = new FitAddon();
 
   ngAfterViewInit(): void {
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.open(this.terminalRef?.nativeElement);
-    this.fitAddon.fit();
 
     this.terminal.onData((s) => {
       this.input.emit(s);
     });
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      this.fitAddon.fit();
+    });
+
+    resizeObserver.observe(this.terminalRef?.nativeElement);
 
     this.outputEvent?.subscribe((s) => this.terminal.write(s));
     this.clearEvent?.subscribe((_) => this.terminal.reset());

@@ -65,6 +65,7 @@ export class SimService {
     try {
       this.parserOutput = this.parser.parse(sourceCode);
       this.sim.initializeMemory(this.compiler.compile(this.parserOutput));
+      this.outputEvent.next('Compiled successfully.\n');
       return this.parserOutput;
     } catch (e: any) {
       this.outputEvent.next(e.message);

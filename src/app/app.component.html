@@ -1,11 +1,6 @@
-<div
-  class="grid h-screen"
-  style="
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto auto auto;
-  "
->
+<div class="grid main-grid min-h-screen" style="background-color: #ebebeb">
   <app-control-menu
+    class="sm:col-span-2"
     [wasCompiled]="wasCompiled"
     [running]="sim.running"
     (compile)="compile()"
@@ -17,7 +12,7 @@
   ></app-control-menu>
 
   <app-code-editor
-    class="col-start-1 row-span-2"
+    class="sm:row-span-2 sm:col-span-2 lg:col-span-1"
     [disabled]="sim.running"
     [compiled]="wasCompiled"
     [parserOutput]="parserOutput"
@@ -30,9 +25,16 @@
     (breakpointsChange)="sim.breakpoints = $event"
   ></app-code-editor>
 
-  <app-cpu-status class="p-2" [simProp]="sim.simProp"></app-cpu-status>
+  <app-terminal
+    class="sm:col-span-2 lg:row-start-4"
+    [outputEvent]="sim.outputEvent"
+    [clearEvent]="sim.clearEvent"
+    (input)="sim.input = $event"
+  ></app-terminal>
 
-  <div class="flex gap-2 p-2">
+  <app-cpu-status class="p-2 lg:py-0" [simProp]="sim.simProp"></app-cpu-status>
+
+  <div class="flex gap-2 p-2 flex-wrap justify-center">
     <app-memory-viewer
       [uint16Array]="sim.simProp.memory"
       [blockSize]="64"
@@ -51,11 +53,4 @@
       [highlightBlue]="sim.simProp.stackPointer"
     ></app-memory-viewer>
   </div>
-
-  <app-terminal
-    class="h-80 col-span-2"
-    [outputEvent]="sim.outputEvent"
-    [clearEvent]="sim.clearEvent"
-    (input)="sim.input = $event"
-  ></app-terminal>
 </div>
