@@ -77,6 +77,8 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     this.addMarker('accHighlightBlue', this.highlightBlue);
     this.addMarker('accHighlightGreen', this.highlightGreen);
     this.addMarker('accHighlightPurple', this.highlightPurple);
+
+    this.recalculateBreakpoints();
   }
 
   ngAfterViewInit(): void {
@@ -101,11 +103,6 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   onValueChange(): void {
     this.sourceCodeChange.emit(this.sourceCode);
-
-    //Recalculate breakpoints
-    for (const key in this.breakpoints) {
-      this.breakpoints[key] = this.getBreakpointRangeForRow(Number(key));
-    }
   }
 
   outputHoveredAddress(x: number, y: number) {
@@ -181,5 +178,11 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
       this.editor.session.doc.positionToIndex({ column: 0, row: row + 1 }, 0) -
         1,
     ];
+  }
+
+  private recalculateBreakpoints() {
+    for (const key in this.breakpoints) {
+      this.breakpoints[key] = this.getBreakpointRangeForRow(Number(key));
+    }
   }
 }

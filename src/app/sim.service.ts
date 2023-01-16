@@ -95,7 +95,7 @@ export class SimService {
   }
 
   private runLoop() {
-    for (let i = 0; i < (this.fullSpeed ? 1_000_000 : 1); i++) {
+    for (let i = 0; i < (this.fullSpeed ? 100_000 : 1); i++) {
       if (!this._running) return;
       this.singleStep();
     }
@@ -123,7 +123,7 @@ export class SimService {
       ) {
         this._running = false;
         this.outputEvent.next(
-          `\nBreakpoint at line ${key} and address ${this.simProp.pc}.`
+          `\nBreakpoint at line ${Number(key) + 1} and address ${this.simProp.pc}.`
         );
         return;
       }
