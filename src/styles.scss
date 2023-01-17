@@ -20,22 +20,30 @@
 $scroll-primary: #1d2021;
 $scroll-secondary: #505354;
 
+:root {
+  color-scheme: dark;
+}
+
 /* Firefox */
-* {
+app-terminal *,
+app-code-editor * {
   scrollbar-width: thin;
   scrollbar-color: $scroll-secondary $scroll-primary;
 }
 
 /* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
+app-terminal *::-webkit-scrollbar,
+app-code-editor *::-webkit-scrollbar {
   width: 12px;
 }
 
-*::-webkit-scrollbar-track {
+app-terminal *::-webkit-scrollbar-track,
+app-code-editor *::-webkit-scrollbar-track {
   background: $scroll-primary;
 }
 
-*::-webkit-scrollbar-thumb {
+app-terminal *::-webkit-scrollbar-thumb,
+app-code-editor *::-webkit-scrollbar-thumb {
   border: 3px solid rgba(0, 0, 0, 0);
   background-clip: padding-box;
   border-radius: 9999px;
