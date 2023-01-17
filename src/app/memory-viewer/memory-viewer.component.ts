@@ -11,7 +11,7 @@ export class MemoryViewerComponent implements OnInit {
   toHex = toHex;
   math = Math;
 
-  @Input() uint16Array!: Uint16Array;
+  @Input() uint16Array?: Uint16Array;
   @Input() blockSize: number = 256;
   @Input() wordsPerRow: number = 4;
   @Input() maxAddress: number = 65_536;

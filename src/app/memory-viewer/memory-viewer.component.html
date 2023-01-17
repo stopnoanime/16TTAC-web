@@ -49,7 +49,7 @@
           class="bg-purple-500 highlightOverlay"
         ></div>
 
-        {{ toHex(uint16Array[getAddress(row, column)]) }}
+        {{ toHex(uint16Array?.[getAddress(row, column)] ?? 0) }}
       </div>
     </div>
   </div>
