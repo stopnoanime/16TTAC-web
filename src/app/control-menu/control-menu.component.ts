@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'app-control-menu',
   templateUrl: './control-menu.component.html',
+  styleUrls: ['./control-menu.component.scss'],
 })
 export class ControlMenuComponent {
   @Input() wasCompiled: boolean = false;

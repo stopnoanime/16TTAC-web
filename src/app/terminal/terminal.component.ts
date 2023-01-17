@@ -29,9 +29,12 @@ export class TerminalComponent implements AfterViewInit {
     convertEol: true,
     cursorBlink: true,
     rows: 17,
+    cols: 20,
     theme: {
-      background: '#262626',
-      cursorAccent: '#262626',
+      background: '#1D2021',
+      foreground: '#EBDAB4',
+      cursorAccent: '#1D2021',
+      cursor: '#EBDAB4',
     },
   });
   fitAddon = new FitAddon();
@@ -39,6 +42,7 @@ export class TerminalComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.open(this.terminalRef?.nativeElement);
+    this.fitAddon.fit();
 
     this.terminal.onData((s) => {
       this.input.emit(s);
@@ -46,6 +50,7 @@ export class TerminalComponent implements AfterViewInit {
 
     const resizeObserver = new ResizeObserver((entries) => {
       this.fitAddon.fit();
+      this.terminal.resize(this.terminal.cols, 17);
     });
 
     resizeObserver.observe(this.terminalRef?.nativeElement);

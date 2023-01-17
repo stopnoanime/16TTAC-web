@@ -4,5 +4,26 @@
 
 ::ng-deep .ace_gutter-cell.ace_breakpoint {
   border-radius: 20px 0px 0px 20px;
-  box-shadow: 0px 0px 100px rgba(239, 68, 68, 0.5) inset;
+  box-shadow: 0px 0px 100px rgba(239, 68, 68, 0.6) inset;
+}
+
+%accHighlight {
+  position: absolute;
+  z-index: 20;
+  opacity: 60%;
+}
+
+::ng-deep .accHighlightBlue {
+  @extend %accHighlight;
+  @apply bg-blue-500;
+}
+
+::ng-deep .accHighlightGreen {
+  @extend %accHighlight;
+  @apply bg-green-500;
+}
+
+::ng-deep .accHighlightPurple {
+  @extend %accHighlight;
+  @apply bg-purple-500;
 }
