@@ -23,39 +23,50 @@ export class TerminalComponent implements AfterViewInit {
   @Input() clearEvent?: Subject<void>;
   @Output() input = new EventEmitter<string>();
 
+  @Input() backgroundColor: string = '#1D2021';
+  @Input() foregroundColor: string = '#EBDAB4';
+
+  @Input() rows: number = 18;
+
   @ViewChild('terminal') terminalRef?: ElementRef;
 
-  terminal = new Terminal({
-    convertEol: true,
-    cursorBlink: true,
-    rows: 17,
-    cols: 20,
-    theme: {
-      background: '#1D2021',
-      foreground: '#EBDAB4',
-      cursorAccent: '#1D2021',
-      cursor: '#EBDAB4',
-    },
-  });
-  fitAddon = new FitAddon();
+  terminal!: Terminal;
+  fitAddon!: FitAddon;
 
   ngAfterViewInit(): void {
+    this.terminal = new Terminal({
+      convertEol: true,
+      cursorBlink: true,
+      rows: this.rows,
+      cols: 20,
+      theme: {
+        background: this.backgroundColor,
+        foreground: this.foregroundColor,
+        cursorAccent: this.backgroundColor,
+        cursor: this.foregroundColor,
+      },
+    });
+
+    this.fitAddon = new FitAddon();
+
     this.terminal.loadAddon(this.fitAddon);
     this.terminal.open(this.terminalRef?.nativeElement);
-    this.fitAddon.fit();
 
     this.terminal.onData((s) => {
       this.input.emit(s);
     });
 
-    const resizeObserver = new ResizeObserver((entries) => {
-      this.fitAddon.fit();
-      this.terminal.resize(this.terminal.cols, 17);
-    });
-
+    const resizeObserver = new ResizeObserver(() => this.fit());
     resizeObserver.observe(this.terminalRef?.nativeElement);
 
     this.outputEvent?.subscribe((s) => this.terminal.write(s));
     this.clearEvent?.subscribe((_) => this.terminal.reset());
+  }
+
+  fit() {
+    this.fitAddon.fit();
+
+    //We want to resize horizontally, but keep the number of rows
+    this.terminal.resize(this.terminal.cols, this.rows);
   }
 }
