@@ -1,27 +1,22 @@
-# 16TTACWeb
+# 16TTAC-web
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.3.
+![screenshot](/page-screenshot.png)
 
-## Development server
+16TTAC-web is a web based frontend for [16TTAC-sim](https://github.com/stopnoanime/16TTAC-sim).
+It alows for writing, compiling and debugging code for the imaginary 16TTAC CPU.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Go [here](https://stopnoanime.github.io/16TTAC-web/) to use it. More information about the 16TTAC can be found [here](https://github.com/stopnoanime/16TTAC-sim).
 
-## Code scaffolding
+## Technical info
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+This project is written in Ts using the Angular framework.
+It uses [Ace Editor](https://github.com/ajaxorg/ace) as the code editor, and [Xterm.js](https://github.com/xtermjs/xterm.js) as the terminal.
 
-## Build
+## Running it locally
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```
+$ git clone https://github.com/stopnoanime/16TTAC-web
+$ cd 16TTAC-web
+$ npm i
+# npp start
+```
