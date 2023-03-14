@@ -29,7 +29,12 @@
               "./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "xterm",
+              "xterm-addon-fit",
+              "brace"
+            ]
           },
           "configurations": {
             "production": {

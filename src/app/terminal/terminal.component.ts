@@ -23,8 +23,8 @@ export class TerminalComponent implements AfterViewInit {
   @Input() clearEvent?: Subject<void>;
   @Output() input = new EventEmitter<string>();
 
-  @Input() backgroundColor: string = '#1D2021';
-  @Input() foregroundColor: string = '#EBDAB4';
+  @Input() backgroundColor: string = '#1D1F21';
+  @Input() foregroundColor: string = '#C5C8C6';
 
   @Input() rows: number = 18;
 

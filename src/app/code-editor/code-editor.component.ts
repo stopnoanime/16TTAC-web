@@ -14,7 +14,7 @@ import { parserOutput } from '16ttac-sim';
 import { CodeService } from '../code.service';
 import OneSixTtacMode, { OneSixTtacWorker } from './OneSixTtacMode';
 import * as ace from 'brace';
-import 'brace/theme/gruvbox';
+import 'brace/theme/tomorrow_night';
 import 'brace/ext/language_tools';
 
 @Component({
@@ -43,7 +43,7 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   config: AceConfigInterface = {
     mode: '16ttac',
-    theme: 'gruvbox',
+    theme: 'tomorrow_night',
     showPrintMargin: false,
     enableBasicAutocompletion: true,
     enableLiveAutocompletion: true,
