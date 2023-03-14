@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrls: ['./control-menu.component.scss'],
 })
 export class ControlMenuComponent {
-  @Input() wasCompiled: boolean = false;
+  @Input() compiled: boolean = false;
   @Input() running: boolean = false;
 
   @Output() compile = new EventEmitter<void>();

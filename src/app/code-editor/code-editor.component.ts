@@ -36,10 +36,10 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() hoveredAddressChange = new EventEmitter<number>();
 
-  private breakpoints: { [key: number]: [number, number] } = {};
-  @Output() breakpointsChange = new EventEmitter<{
-    [key: number]: [number, number];
-  }>();
+  private breakpoints: breakpointsType = {};
+  @Output() breakpointsChange = new EventEmitter<breakpointsType>();
+
+  private currentlyShownMarkers: number[] = [];
 
   config: AceConfigInterface = {
     mode: '16ttac',
@@ -51,7 +51,7 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     useWorker: true,
   };
 
-  @ViewChild(AceComponent) componentRef?: AceComponent;
+  @ViewChild(AceComponent) aceComponent?: AceComponent;
   editor!: ace.Editor;
 
   constructor(private codeService: CodeService) {}
@@ -63,42 +63,23 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     (ace as any).define('ace/mode/16ttac', { Mode: OneSixTtacMode });
   }
 
-  private currentlyShownMarkers: number[] = [];
   ngOnChanges(changes: SimpleChanges): void {
-    this.currentlyShownMarkers.forEach((id) =>
-      this.editor.session.removeMarker(id)
-    );
-    this.currentlyShownMarkers = [];
-
+    this.clearMarkers();
     this.hoveredAddressChange.emit(undefined);
 
     if (!this.compiled) return;
 
+    //Compiled went from false to true
+    if (changes['compiled']) this.recalculateBreakpoints();
+
     this.addMarker('accHighlightBlue', this.highlightBlue);
     this.addMarker('accHighlightGreen', this.highlightGreen);
     this.addMarker('accHighlightPurple', this.highlightPurple);
-
-    this.recalculateBreakpoints();
   }
 
   ngAfterViewInit(): void {
-    this.editor = this.componentRef?.directiveRef?.ace() as ace.Editor;
-    this.editor.on('guttermousedown', (e) => {
-      const row = e.getDocumentPosition().row;
-      const editorBreakpoints = this.editor.session.getBreakpoints();
-
-      if (!editorBreakpoints[row]) {
-        this.editor.session.setBreakpoint(row, 'ace_breakpoint');
-        this.breakpoints[row] = this.getBreakpointRangeForRow(row);
-      } else {
-        this.editor.session.clearBreakpoint(row);
-        delete this.breakpoints[row];
-      }
-
-      this.breakpointsChange.emit(this.breakpoints);
-
-      e.stop();
-    });
+    this.editor = this.aceComponent?.directiveRef?.ace() as ace.Editor;
+    this.editor.on('guttermousedown', (e) => this.toggleBreakpoint(e));
   }
 
   onValueChange(): void {
@@ -119,28 +100,31 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
       (y + (r as any).scrollTop - canvasPos.top) / r.lineHeight
     );
 
-    const documentPosition = this.editor.session.screenToDocumentPosition(
-      row,
-      column
-    );
-    const positionIndex = this.editor.session.doc.positionToIndex(
-      documentPosition,
-      0
-    );
-
     const foundAddress = this.codeService.getAddressForSourceCodeIndex(
-      positionIndex,
+      this.editor.session.doc.positionToIndex(
+        this.editor.session.screenToDocumentPosition(row, column),
+        0
+      ),
       this.parserOutput
     );
+
     this.hoveredAddressChange.emit(foundAddress ?? undefined);
   }
 
   private addMarker(name: string, address?: number) {
     const range = this.getSourceCodeRangeForAddress(address);
-    if (range)
-      this.currentlyShownMarkers.push(
-        this.editor.session.addMarker(range, name, 'text', false)
-      );
+    if (!range) return;
+
+    this.currentlyShownMarkers.push(
+      this.editor.session.addMarker(range, name, 'text', false)
+    );
+  }
+
+  private clearMarkers() {
+    this.currentlyShownMarkers.forEach((id) =>
+      this.editor.session.removeMarker(id)
+    );
+    this.currentlyShownMarkers = [];
   }
 
   private getSourceCodeRangeForAddress(address?: number): ace.Range | null {
@@ -172,6 +156,30 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
     );
   }
 
+  private toggleBreakpoint(e: any) {
+    const row = e.getDocumentPosition().row;
+    const editorBreakpoints = this.editor.session.getBreakpoints();
+
+    if (!editorBreakpoints[row]) {
+      this.editor.session.setBreakpoint(row, 'ace_breakpoint');
+      this.breakpoints[row] = this.getBreakpointRangeForRow(row);
+    } else {
+      this.editor.session.clearBreakpoint(row);
+      delete this.breakpoints[row];
+    }
+
+    this.breakpointsChange.emit(this.breakpoints);
+
+    e.stop();
+  }
+
+  private recalculateBreakpoints() {
+    for (const key in this.breakpoints) {
+      this.breakpoints[key] = this.getBreakpointRangeForRow(Number(key));
+    }
+    this.breakpointsChange.emit(this.breakpoints);
+  }
+
   private getBreakpointRangeForRow(row: number): [number, number] {
     return [
       this.editor.session.doc.positionToIndex({ column: 0, row: row }, 0),
@@ -179,10 +187,6 @@ export class CodeEditorComponent implements OnInit, OnChanges, AfterViewInit {
         1,
     ];
   }
-
-  private recalculateBreakpoints() {
-    for (const key in this.breakpoints) {
-      this.breakpoints[key] = this.getBreakpointRangeForRow(Number(key));
-    }
-  }
 }
+
+export type breakpointsType = { [row: number]: [number, number] };

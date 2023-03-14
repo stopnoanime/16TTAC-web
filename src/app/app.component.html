@@ -1,9 +1,9 @@
 <div class="grid main-grid min-h-screen" style="background-color: #25282c">
   <app-control-menu
     class="sm:col-span-2"
-    [wasCompiled]="wasCompiled"
+    [compiled]="sim.compiled"
     [running]="sim.running"
-    (compile)="compile()"
+    (compile)="sim.compile()"
     (reset)="sim.reset()"
     (singleStep)="sim.singleStep()"
     (startStop)="sim.startStop()"
@@ -14,10 +14,9 @@
   <app-code-editor
     class="sm:row-span-2 sm:col-span-2 lg:col-span-1"
     [disabled]="sim.running"
-    [compiled]="wasCompiled"
-    [parserOutput]="parserOutput"
-    [(sourceCode)]="sourceCode"
-    (sourceCodeChange)="wasCompiled = false"
+    [compiled]="sim.compiled"
+    [parserOutput]="sim.parserOutput"
+    [(sourceCode)]="sim.sourceCode"
     [highlightBlue]="sim.simProp.adr"
     [highlightGreen]="sim.simProp.pc"
     [highlightPurple]="memoryViewerHoveredAddress"

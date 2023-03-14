@@ -19,18 +19,23 @@ describe('SimService', () => {
     service.outputEvent.subscribe((text) => {
       expect(text).toContain('Expected');
     });
-    service.compile('abc');
+
+    service.sourceCode = 'abc';
+    service.compile();
   });
 
   it('should output confirmation on compile', () => {
     service.outputEvent.subscribe((text) => {
       expect(text).toContain('Compiled successfully');
     });
-    service.compile('NULL => NULL');
+
+    service.sourceCode = 'NULL => NULL';
+    service.compile();
   });
 
   it('should single step', () => {
-    service.compile('123 => PUSH');
+    service.sourceCode = '123 => PUSH';
+    service.compile();
     service.singleStep();
 
     expect(service.simProp.stackPointer).toBe(1);
@@ -42,7 +47,8 @@ describe('SimService', () => {
       expect(text).toContain('Halting');
     });
 
-    service.compile('NULL => HALT');
+    service.sourceCode = 'NULL => HALT';
+    service.compile();
     service.singleStep();
   });
 
@@ -58,7 +64,8 @@ describe('SimService', () => {
     jasmine.clock().install();
 
     service.timeout = 100;
-    service.compile('123 => PUSH 1234 => PUSH 12345 => PUSH');
+    service.sourceCode = '123 => PUSH 1234 => PUSH 12345 => PUSH';
+    service.compile();
     service.startStop();
 
     jasmine.clock().tick(200);
@@ -70,7 +77,8 @@ describe('SimService', () => {
   });
 
   it('should start at full speed', () => {
-    service.compile('123 => PUSH 1234 => PUSH 12345 => PUSH NULL => HALT');
+    service.sourceCode = '123 => PUSH 1234 => PUSH 12345 => PUSH NULL => HALT';
+    service.compile();
     service.fullSpeed = true;
     service.startStop();
 
@@ -83,12 +91,14 @@ describe('SimService', () => {
       expect(text).toBe('a');
     });
 
-    service.compile(`'a' => OUT`);
+    service.sourceCode = `'a' => OUT`;
+    service.compile();
     service.singleStep();
   });
 
   it('should read input data', () => {
-    service.compile(`IN => ACC`);
+    service.sourceCode = `IN => ACC`;
+    service.compile();
     service.input = 'x';
     service.singleStep();
 
@@ -96,11 +106,12 @@ describe('SimService', () => {
   });
 
   it('should stop on breakpoint', () => {
-    service.compile(`
+    service.sourceCode = `
     NULL => NULL
     NULL => NULL
     NULL => HALT
-    `);
+    `;
+    service.compile();
     service.fullSpeed = true;
     service.breakpoints = {
       1: [22, 34],

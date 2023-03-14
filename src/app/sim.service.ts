@@ -1,7 +1,14 @@
-import { Compiler, Parser, parserOutput, Sim } from '16ttac-sim';
+import {
+  Compiler,
+  exampleProgram,
+  Parser,
+  parserOutput,
+  Sim,
+} from '16ttac-sim';
 import { Injectable } from '@angular/core';
 import { Subject, Subscription, timer } from 'rxjs';
 import { asapScheduler, asyncScheduler } from 'rxjs';
+import { breakpointsType } from './code-editor/code-editor.component';
 import { CodeService } from './code.service';
 
 @Injectable({
@@ -10,7 +17,7 @@ import { CodeService } from './code.service';
 export class SimService {
   public timeout: number = 1000;
   public fullSpeed: boolean = false;
-  public breakpoints: { [key: number]: [number, number] } = {};
+  public breakpoints: breakpointsType = {};
 
   public outputEvent = new Subject<string>();
   public clearEvent = new Subject<void>();
@@ -19,8 +26,25 @@ export class SimService {
     this._inputBuffer += s;
   }
 
+  public set sourceCode(s: string) {
+    this._sourceCode = s;
+    this._compiled = false;
+  }
+
+  public get sourceCode() {
+    return this._sourceCode;
+  }
+
   public get running() {
     return this._running;
+  }
+
+  public get compiled() {
+    return this._compiled;
+  }
+
+  public get parserOutput() {
+    return this._parserOutput;
   }
 
   public get simProp(): simPropType {
@@ -38,10 +62,12 @@ export class SimService {
 
   private _inputBuffer: string = '';
   private _running = false;
+  private _compiled = false;
+  private _sourceCode: string = exampleProgram;
+  private _parserOutput!: parserOutput;
   private simRunningSubscription!: Subscription;
 
   private parser = new Parser();
-  private parserOutput!: parserOutput;
   private compiler = new Compiler();
   private sim = new Sim({
     outputRawCallback: (n) => this.outputEvent.next(String.fromCharCode(n)),
@@ -59,17 +85,17 @@ export class SimService {
 
   constructor(private codeService: CodeService) {}
 
-  public compile(sourceCode: string) {
+  public compile() {
     this.reset();
 
     try {
-      this.parserOutput = this.parser.parse(sourceCode);
+      this._parserOutput = this.parser.parse(this._sourceCode);
       this.sim.initializeMemory(this.compiler.compile(this.parserOutput));
       this.outputEvent.next('Compiled successfully.\n');
-      return this.parserOutput;
+      this._compiled = true;
     } catch (e: any) {
       this.outputEvent.next(e.message);
-      return null;
+      this._compiled = false;
     }
   }
 

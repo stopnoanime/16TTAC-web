@@ -7,23 +7,9 @@ import { SimService } from './sim.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   constructor(public sim: SimService) {}
 
-  wasCompiled = false;
   memoryViewerHoveredAddress?: number;
   sourceCodeHoveredAddress?: number;
-  parserOutput!: parserOutput;
-
-  sourceCode = exampleProgram;
-
-  ngOnInit() {}
-
-  compile() {
-    const parserOutput = this.sim.compile(this.sourceCode);
-    if (parserOutput === null) return; //Could not compile
-
-    this.parserOutput = parserOutput;
-    this.wasCompiled = true;
-  }
 }

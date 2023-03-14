@@ -15,7 +15,7 @@
       mat-flat-button
       color="primary"
       (click)="reset.emit()"
-      [disabled]="!wasCompiled || running"
+      [disabled]="!compiled || running"
       matTooltip="Reset CPU"
     >
       <mat-icon class="min-w-fit">restart_alt</mat-icon>
@@ -26,7 +26,7 @@
       mat-flat-button
       color="primary"
       (click)="singleStep.emit()"
-      [disabled]="!wasCompiled || running"
+      [disabled]="!compiled || running"
       matTooltip="Single step CPU"
     >
       <mat-icon class="min-w-fit">skip_next</mat-icon>
@@ -37,7 +37,7 @@
       mat-flat-button
       color="primary"
       (click)="startStop.emit()"
-      [disabled]="!wasCompiled"
+      [disabled]="!compiled"
       [matTooltip]="running ? 'Stop CPU' : 'Run CPU'"
     >
       <mat-icon class="min-w-fit" *ngIf="!running">play_arrow</mat-icon>
@@ -50,7 +50,7 @@
     <div class="flex items-center mr-3">
       <span
         class="mr-5 text-white"
-        [class.opacity-50]="!wasCompiled || fullSpeed.checked"
+        [class.opacity-50]="!compiled || fullSpeed.checked"
         >CPU speed:</span
       >
       <mat-slider
@@ -60,7 +60,7 @@
         discrete
         color="primary"
         [displayWith]="formatSliderLabel"
-        [disabled]="!wasCompiled || fullSpeed.checked"
+        [disabled]="!compiled || fullSpeed.checked"
       >
         <input
           matSliderThumb
@@ -72,7 +72,7 @@
     <mat-checkbox
       #fullSpeed
       color="primary"
-      [disabled]="!wasCompiled"
+      [disabled]="!compiled"
       (change)="fullSpeedChange.emit($event.checked)"
       >Full speed</mat-checkbox
     >
