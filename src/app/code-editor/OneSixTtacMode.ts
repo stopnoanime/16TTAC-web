@@ -132,6 +132,7 @@ export default class OneSixTtacMode extends ace.acequire('ace/mode/text').Mode {
     ];
   }
 
+  /** Create ace syntax validation worker instance */
   createWorker(session: ace.IEditSession) {
     const WorkerClient = ace.acequire(
       'ace/worker/worker_client'
@@ -155,6 +156,7 @@ export default class OneSixTtacMode extends ace.acequire('ace/mode/text').Mode {
   }
 }
 
+/** https://github.com/ajaxorg/ace-builds/blob/master/src/worker-json.js#L1257r */
 export class Mirror {
   sender: any;
   doc: ace.Document;
@@ -215,6 +217,7 @@ export class Mirror {
   }
 }
 
+/** Ace syntax validation worker */
 export class OneSixTtacWorker extends Mirror {
   private parser = new Parser();
 

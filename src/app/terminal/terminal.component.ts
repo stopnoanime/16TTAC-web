@@ -3,8 +3,10 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input, OnDestroy,
-  Output, ViewChild
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild,
 } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { Terminal } from 'xterm';
@@ -58,8 +60,12 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
     const resizeObserver = new ResizeObserver(() => this.fit());
     resizeObserver.observe(this.terminalRef?.nativeElement);
 
-    this.outputEventSubscription = this.outputEvent?.subscribe((s) => this.terminal.write(s));
-    this.clearEventSubscription = this.clearEvent?.subscribe((_) => this.terminal.reset());
+    this.outputEventSubscription = this.outputEvent?.subscribe((s) =>
+      this.terminal.write(s)
+    );
+    this.clearEventSubscription = this.clearEvent?.subscribe((_) =>
+      this.terminal.reset()
+    );
   }
 
   ngOnDestroy(): void {

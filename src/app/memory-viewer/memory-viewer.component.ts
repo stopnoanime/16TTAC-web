@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { toHex } from '../toHex';
@@ -32,17 +39,19 @@ export class MemoryViewerComponent implements OnInit, OnDestroy {
   constructor() {}
 
   ngOnInit(): void {
-    this.addressFormSubscription = this.addressForm.valueChanges.subscribe((val) => {
-      if (val === null) return;
+    this.addressFormSubscription = this.addressForm.valueChanges.subscribe(
+      (val) => {
+        if (val === null) return;
 
-      this.addressForm.setValue(Math.min(this.maxAddress, Math.max(0, val)), {
-        emitEvent: false,
-      });
-      this.rowOffset = Math.min(
-        (this.maxAddress - this.blockSize) / this.wordsPerRow,
-        Math.floor(this.addressForm.value! / this.wordsPerRow)
-      );
-    });
+        this.addressForm.setValue(Math.min(this.maxAddress, Math.max(0, val)), {
+          emitEvent: false,
+        });
+        this.rowOffset = Math.min(
+          (this.maxAddress - this.blockSize) / this.wordsPerRow,
+          Math.floor(this.addressForm.value! / this.wordsPerRow)
+        );
+      }
+    );
   }
 
   ngOnDestroy() {

@@ -10,7 +10,7 @@ describe('TerminalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TerminalComponent]
+      declarations: [TerminalComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TerminalComponent);
@@ -29,8 +29,10 @@ describe('TerminalComponent', () => {
     component.outputEvent?.next('test string');
 
     component.terminal.onWriteParsed(() => {
-      expect(component.terminal.buffer.active.getLine(0)?.translateToString(true)).toBe('test string')
-      done()
-    })
+      expect(
+        component.terminal.buffer.active.getLine(0)?.translateToString(true)
+      ).toBe('test string');
+      done();
+    });
   });
 });

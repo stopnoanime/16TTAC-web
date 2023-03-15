@@ -27,9 +27,9 @@ declare global {
 }
 
 Cypress.Commands.add('writeCode', (code: string) => {
-  return cy.get('.ace_text-input').first()
-  .type('{selectall}{backspace}{backspace}', { force: true })
-  .type(code, { force: true });
+  return cy
+    .get('.ace_text-input')
+    .first()
+    .type('{selectall}{backspace}{backspace}', { force: true })
+    .type(code, { force: true });
 });
-
-

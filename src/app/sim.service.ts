@@ -3,7 +3,7 @@ import {
   exampleProgram,
   Parser,
   parserOutput,
-  Sim
+  Sim,
 } from '16ttac-sim';
 import { Injectable } from '@angular/core';
 import { asyncScheduler, Subject, Subscription } from 'rxjs';
@@ -84,6 +84,9 @@ export class SimService {
 
   constructor(private codeService: CodeService) {}
 
+  /**
+   * Compile code stored in `sourceCode`
+   */
   public compile() {
     this.reset();
 
@@ -98,6 +101,9 @@ export class SimService {
     }
   }
 
+  /**
+   * Reset the CPU and Terminal
+   */
   public reset() {
     this.sim.reset();
     this.clearEvent.next();
@@ -105,11 +111,17 @@ export class SimService {
     this._running = false;
   }
 
+  /**
+   * Single step the CPU
+   */
   public singleStep() {
     this.sim.singleStep();
     this.checkBreakpoints();
   }
 
+  /**
+   * Start or stop the CPU
+   */
   public startStop() {
     if (this._running) {
       this._running = false;

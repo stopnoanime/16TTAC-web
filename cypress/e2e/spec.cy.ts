@@ -29,7 +29,7 @@ describe('16TTAC-web', () => {
   });
 
   it('singleSteps code and outputs data to terminal', () => {
-    cy.writeCode(`'x' => OUT`)
+    cy.writeCode(`'x' => OUT`);
     cy.contains('button', 'Compile').click();
 
     cy.contains('button', 'Single step').click();
@@ -37,28 +37,31 @@ describe('16TTAC-web', () => {
   });
 
   it('shows cpu data', () => {
-    cy.writeCode('NULL => NULL')
+    cy.writeCode('NULL => NULL');
     cy.contains('button', 'Compile').click();
 
     cy.contains('button', 'Single step').click();
     cy.contains('button', 'Single step').click();
 
-    cy.contains('div', 'Pc: ').contains('0002')
+    cy.contains('div', 'Pc: ').contains('0002');
   });
 
   it('restarts cpu and terminal', () => {
-    cy.writeCode('NULL => NULL')
+    cy.writeCode('NULL => NULL');
     cy.contains('button', 'Compile').click();
     cy.contains('button', 'Single step').click();
 
     cy.contains('button', 'Restart').click();
 
-    cy.get('.xterm-rows').invoke('text').then(s => s.trim()).should('be.empty')
-    cy.contains('div', 'Pc: ').contains('0000')
+    cy.get('.xterm-rows')
+      .invoke('text')
+      .then((s) => s.trim())
+      .should('be.empty');
+    cy.contains('div', 'Pc: ').contains('0000');
   });
 
   it('outputs halt message', () => {
-    cy.writeCode(`NULL => HALT`)
+    cy.writeCode(`NULL => HALT`);
     cy.contains('button', 'Compile').click();
     cy.contains('button', 'Single step').click();
 
@@ -66,14 +69,14 @@ describe('16TTAC-web', () => {
   });
 
   it('outputs memory in memory viewer', () => {
-    cy.writeCode(`'x' => OUT`)
+    cy.writeCode(`'x' => OUT`);
     cy.contains('button', 'Compile').click();
 
-    cy.contains('span', '0x0000').next().should('contain.text','061C')
+    cy.contains('span', '0x0000').next().should('contain.text', '061C');
   });
 
   it('runs code at full speed', () => {
-    cy.writeCode(`'x' => OUT NULL => HALT`)
+    cy.writeCode(`'x' => OUT NULL => HALT`);
     cy.contains('button', 'Compile').click();
 
     cy.contains('mat-checkbox', 'Full speed').click();
@@ -83,7 +86,7 @@ describe('16TTAC-web', () => {
   });
 
   it('runs code at normal speed', () => {
-    cy.writeCode(`'x' => OUT  NULL => HALT`)
+    cy.writeCode(`'x' => OUT  NULL => HALT`);
     cy.contains('button', 'Compile').click();
 
     cy.contains('button', 'Start').click();
@@ -92,18 +95,18 @@ describe('16TTAC-web', () => {
   });
 
   it('receives data from terminal', () => {
-    cy.writeCode(`IN => OUT NULL => HALT`)
+    cy.writeCode(`IN => OUT NULL => HALT`);
     cy.contains('button', 'Compile').click();
     cy.contains('button', 'Start').click();
 
-    cy.get('.xterm').type('z')
+    cy.get('.xterm').type('z');
     cy.get('.xterm').should('include.text', 'zHalting.');
   });
 
   it('stops on breakpoints', () => {
-    cy.writeCode(`NULL => NULL NULL => NULL`)
+    cy.writeCode(`NULL => NULL NULL => NULL`);
 
-    cy.get('.ace_gutter-cell').contains('1').click({force: true});
+    cy.get('.ace_gutter-cell').contains('1').click({ force: true });
 
     cy.contains('button', 'Compile').click();
     cy.contains('button', 'Single step').click();
