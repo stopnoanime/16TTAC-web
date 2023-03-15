@@ -15,6 +15,22 @@ describe('SimService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('should compile', () => {
+    service.sourceCode = 'NULL => NULL';
+    service.compile();
+
+    expect(service.compiled).toBeTrue();
+    expect(service.parserOutput).toBeTruthy();
+  });
+
+  it('should reset compiled state on source code change', () => {
+    service.compile();
+    expect(service.compiled).toBeTrue();
+
+    service.sourceCode = 'change';
+    expect(service.compiled).toBeFalse();
+  });
+
   it('should output error on bad input', () => {
     service.outputEvent.subscribe((text) => {
       expect(text).toContain('Expected');
