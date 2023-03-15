@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { toHex } from '../toHex';
 
 @Component({
@@ -7,7 +8,7 @@ import { toHex } from '../toHex';
   templateUrl: './memory-viewer.component.html',
   styleUrls: ['./memory-viewer.component.scss'],
 })
-export class MemoryViewerComponent implements OnInit {
+export class MemoryViewerComponent implements OnInit, OnDestroy {
   toHex = toHex;
   math = Math;
 
@@ -26,11 +27,12 @@ export class MemoryViewerComponent implements OnInit {
 
   rowOffset = 0;
   addressForm = new FormControl(0);
+  addressFormSubscription?: Subscription;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.addressForm.valueChanges.subscribe((val) => {
+    this.addressFormSubscription = this.addressForm.valueChanges.subscribe((val) => {
       if (val === null) return;
 
       this.addressForm.setValue(Math.min(this.maxAddress, Math.max(0, val)), {
@@ -41,6 +43,10 @@ export class MemoryViewerComponent implements OnInit {
         Math.floor(this.addressForm.value! / this.wordsPerRow)
       );
     });
+  }
+
+  ngOnDestroy() {
+    this.addressFormSubscription?.unsubscribe();
   }
 
   getAddress(row: number, col: number) {

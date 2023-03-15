@@ -3,11 +3,10 @@ import {
   exampleProgram,
   Parser,
   parserOutput,
-  Sim,
+  Sim
 } from '16ttac-sim';
 import { Injectable } from '@angular/core';
-import { Subject, Subscription, timer } from 'rxjs';
-import { asapScheduler, asyncScheduler } from 'rxjs';
+import { asyncScheduler, Subject, Subscription } from 'rxjs';
 import { breakpointsType } from './code-editor/code-editor.component';
 import { CodeService } from './code.service';
 

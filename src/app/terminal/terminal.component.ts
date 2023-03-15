@@ -3,13 +3,10 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-  ViewChild,
+  Input, OnDestroy,
+  Output, ViewChild
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Terminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 
@@ -18,7 +15,7 @@ import { FitAddon } from 'xterm-addon-fit';
   templateUrl: './terminal.component.html',
   styleUrls: ['./terminal.component.scss'],
 })
-export class TerminalComponent implements AfterViewInit {
+export class TerminalComponent implements AfterViewInit, OnDestroy {
   @Input() outputEvent?: Subject<string>;
   @Input() clearEvent?: Subject<void>;
   @Output() input = new EventEmitter<string>();
@@ -32,6 +29,8 @@ export class TerminalComponent implements AfterViewInit {
 
   terminal!: Terminal;
   fitAddon!: FitAddon;
+  outputEventSubscription?: Subscription;
+  clearEventSubscription?: Subscription;
 
   ngAfterViewInit(): void {
     this.terminal = new Terminal({
@@ -59,8 +58,13 @@ export class TerminalComponent implements AfterViewInit {
     const resizeObserver = new ResizeObserver(() => this.fit());
     resizeObserver.observe(this.terminalRef?.nativeElement);
 
-    this.outputEvent?.subscribe((s) => this.terminal.write(s));
-    this.clearEvent?.subscribe((_) => this.terminal.reset());
+    this.outputEventSubscription = this.outputEvent?.subscribe((s) => this.terminal.write(s));
+    this.clearEventSubscription = this.clearEvent?.subscribe((_) => this.terminal.reset());
+  }
+
+  ngOnDestroy(): void {
+    this.outputEventSubscription?.unsubscribe();
+    this.clearEventSubscription?.unsubscribe();
   }
 
   fit() {

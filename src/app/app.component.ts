@@ -1,5 +1,4 @@
-import { parserOutput, exampleProgram } from '16ttac-sim';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SimService } from './sim.service';
 
 @Component({
