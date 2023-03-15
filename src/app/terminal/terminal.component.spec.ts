@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 
 import { TerminalComponent } from './terminal.component';
 
-describe('MemoryViewerComponent', () => {
+describe('TerminalComponent', () => {
   let component: TerminalComponent;
   let fixture: ComponentFixture<TerminalComponent>;
   let nativeEl: HTMLElement;
@@ -21,7 +21,7 @@ describe('MemoryViewerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
 
