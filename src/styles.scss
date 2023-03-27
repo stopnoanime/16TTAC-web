@@ -4,6 +4,11 @@
 
 @import "xterm/css/xterm.css";
 
+body {
+  width: min-content;
+  min-width: 100%;
+}
+
 .mdc-slider .mdc-slider__value-indicator-container {
   bottom: 0;
   top: 44px;
