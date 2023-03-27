@@ -25,7 +25,7 @@
   ></app-code-editor>
 
   <app-terminal
-    class="sm:col-span-2 lg:row-start-4 border-t border-neutral-600 overflow-x-hidden"
+    class="sm:col-span-2 lg:col-span-1 lg:row-start-4 border-t border-neutral-600 overflow-x-hidden"
     [outputEvent]="sim.outputEvent"
     [clearEvent]="sim.clearEvent"
     (input)="sim.input = $event"
@@ -34,7 +34,7 @@
   <app-cpu-status [simProp]="sim.simProp"></app-cpu-status>
 
   <div
-    class="flex flex-wrap justify-center border-t sm:border-l sm:border-t-0 lg:border-t lg:border-l-0 border-neutral-500"
+    class="lg:row-span-2 flex flex-wrap justify-center border-t sm:border-l sm:border-t-0 lg:border-t lg:border-l-0 border-neutral-500"
   >
     <app-memory-viewer
       [uint16Array]="sim.simProp.memory"

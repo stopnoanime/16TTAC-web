@@ -25,7 +25,7 @@ export class TerminalComponent implements AfterViewInit, OnDestroy {
   @Input() backgroundColor: string = '#1D1F21';
   @Input() foregroundColor: string = '#C5C8C6';
 
-  @Input() rows: number = 18;
+  @Input() rows: number = 12;
 
   @ViewChild('terminal') terminalRef?: ElementRef;
 
