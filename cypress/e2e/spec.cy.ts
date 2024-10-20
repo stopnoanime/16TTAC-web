@@ -72,7 +72,7 @@ describe('16TTAC-web', () => {
     cy.writeCode(`'x' => OUT`);
     cy.contains('button', 'Compile').click();
 
-    cy.contains('span', '0x0000').next().should('contain.text', '061C');
+    cy.contains('span', '0x0000').next().should('contain.text', '0654');
   });
 
   it('runs code at full speed', () => {

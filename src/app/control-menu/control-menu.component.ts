@@ -10,6 +10,7 @@ export class ControlMenuComponent {
   @Input() running: boolean = false;
 
   @Output() compile = new EventEmitter<void>();
+  @Output() download = new EventEmitter<void>();
   @Output() reset = new EventEmitter<void>();
   @Output() singleStep = new EventEmitter<void>();
   @Output() startStop = new EventEmitter<void>();

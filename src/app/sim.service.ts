@@ -102,6 +102,32 @@ export class SimService {
   }
 
   /**
+   * Downloads the compiled source code in hex format
+   */
+  public download() {
+    const text = Array.from(this.compiler.compile(this.parserOutput))
+      .map((v) => ('0000' + v.toString(16).toUpperCase()).slice(-4))
+      .join('\n');
+
+    const blobUrl = URL.createObjectURL(
+      new Blob([text], {
+        type: 'text/plain',
+      })
+    );
+    const aElement = document.createElement('a');
+    aElement.href = blobUrl;
+    aElement.download = 'program.hex';
+
+    aElement.style.display = 'none';
+    document.body.appendChild(aElement);
+    aElement.click();
+
+    // Cleanup
+    URL.revokeObjectURL(blobUrl);
+    aElement.remove();
+  }
+
+  /**
    * Reset the CPU and Terminal
    */
   public reset() {
