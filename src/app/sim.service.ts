@@ -56,6 +56,7 @@ export class SimService {
       memory: this.sim.memory,
       stack: this.sim.stack,
       stackPointer: this.sim.stackPointer,
+      led: this.sim.led,
     };
   }
 
@@ -206,4 +207,5 @@ export type simPropType = {
   memory: Uint16Array;
   stack: Uint16Array;
   stackPointer: number;
+  led: number;
 };

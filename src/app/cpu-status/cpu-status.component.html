@@ -5,4 +5,11 @@
   <div>Stack Pointer: {{ toHex(simProp.stackPointer) }}</div>
   <div>Carry Flag: {{ simProp.carry ? "True" : "False" }}</div>
   <div>Zero Flag: {{ simProp.zero ? "True" : "False" }}</div>
+  <div>
+    LED:
+    <div
+      class="w-4 h-4 inline-block align-middle"
+      [style.background]="ledRGB"
+    ></div>
+  </div>
 </div>
