@@ -117,7 +117,7 @@ export class SimService {
     );
     const aElement = document.createElement('a');
     aElement.href = blobUrl;
-    aElement.download = 'program.hex';
+    aElement.download = 'ram-init.hex';
 
     aElement.style.display = 'none';
     document.body.appendChild(aElement);
